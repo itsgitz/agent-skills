@@ -91,49 +91,53 @@ jobs:
       - name: Save and compress image
         run: docker save ${{ env.IMAGE_NAME }}:latest | gzip > image.tar.gz
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Add VPS to known hosts
+        run: ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Transfer files to VPS
         run: |
           rsync -avz \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
             image.tar.gz docker-compose.yml \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_DIR }}/
 
       - name: Deploy on VPS
-        run: |
-          ssh -i ~/.ssh/deploy_key \
-            -p ${{ secrets.SSH_PORT }} \
-            -o StrictHostKeyChecking=yes \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'ENDSSH'
-          cd ${{ env.DEPLOY_DIR }}
-          gunzip -c image.tar.gz | docker load
-          docker compose down
-          docker compose up -d
-          docker image prune -f
-          rm -f image.tar.gz
-          ENDSSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ${{ env.DEPLOY_DIR }}
+            gunzip -c image.tar.gz | docker load
+            docker compose down
+            docker compose up -d
+            docker image prune -f
+            rm -f image.tar.gz
 ```
 
 ## Key Optimizations
 
 - **Layer caching (`type=gha`, `mode=max`):** GitHub Actions cache backend. Skips rebuild of unchanged layers. `mode=max` caches all intermediate layers, not just the final stage.
 - **Gzip compression:** `docker save` outputs uncompressed tar. Gzip reduces image size 60–70% before transfer. For images >2 GB, consider `zstd` (`docker save ... | zstd`) for faster compression.
+- **`webfactory/ssh-agent`:** Loads the deploy key into ssh-agent in memory — no key file written to disk. Integrates with the system SSH client, so rsync and other SSH commands work without `-i` flags.
+- **`appleboy/ssh-action`:** Executes remote Docker commands over SSH with a clean YAML interface. Errors and stdout are surfaced natively in the Actions log without manual heredoc handling.
 - **rsync `-avz`:** Archive mode + compression during transfer. Subsequent deploys only transfer changed bytes (`docker-compose.yml` updates are nearly instant).
 - **`load: true`:** Required in `build-push-action` when NOT pushing to a registry. Makes the built image available locally for `docker save`.
 
 ## Security Considerations
 
 - **Never use `StrictHostKeyChecking=no`.** Use `ssh-keyscan` to populate `known_hosts` before connecting. Disabling host key checking enables MITM attacks.
+- **SSH key never written to disk.** `webfactory/ssh-agent` loads the key into ssh-agent in memory. `appleboy/ssh-action` handles its own key internally — no files, no CLI args.
 - **Ed25519 keys preferred** over RSA — smaller, faster, same security.
 - **Dedicated deploy user** on the VPS: non-root, member of `docker` group, write access to deploy dir only.
 - **`permissions: contents: read`** — least-privilege GITHUB_TOKEN scoping.
-- **SSH key never echoed** — stored in a file, not passed as a CLI argument.
 
 ## Common Mistakes
 
@@ -142,7 +146,6 @@ jobs:
 | Using GHCR/Docker Hub instead of `docker save` | Doesn't match the no-registry requirement; adds registry credentials complexity | Use `docker save \| gzip > image.tar.gz` + rsync |
 | `StrictHostKeyChecking=no` | Disables MITM protection | Use `ssh-keyscan` + `StrictHostKeyChecking=yes` |
 | Missing `load: true` in build step | Image not available locally for `docker save` | Add `load: true` to `build-push-action` |
-| Forgetting `chmod 600` on SSH key | SSH refuses keys with open permissions | `chmod 600 ~/.ssh/deploy_key` after writing key |
 | Using `docker-compose` (v1 binary) | Deprecated; may not exist on VPS | Use `docker compose` (v2 plugin, no hyphen) |
 | No `timeout-minutes` | Stuck deploy blocks runner for 6 hours | Set `timeout-minutes: 20` on the job |
 | Not cleaning up `image.tar.gz` on VPS | Disk fills up over repeated deploys | `rm -f image.tar.gz` after `docker load` |
