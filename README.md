@@ -14,6 +14,13 @@ Install all skills from this repository at once:
 npx skills add itsgitz/agent-skills
 ```
 
+Or use the `--skill` flag for more control:
+
+```bash
+npx skills add itsgitz/agent-skills --skill '*'   # all skills
+npx skills add itsgitz/agent-skills -s docker-vps-deploy  # specific skill
+```
+
 ## Skills
 
 | Skill | Description | Install |
@@ -22,10 +29,15 @@ npx skills add itsgitz/agent-skills
 
 ## Usage
 
-Install a specific skill into your project:
+Install a specific skill into your project — two equivalent syntaxes:
 
 ```bash
+# Path syntax
 npx skills add itsgitz/agent-skills/<skill-name>
+
+# Flag syntax (handy for multiple skills)
+npx skills add itsgitz/agent-skills -s <skill-name>
+npx skills add itsgitz/agent-skills -s skill-a skill-b  # multiple at once
 ```
 
 Once installed, your AI agent will automatically invoke the skill when relevant triggers are detected (e.g., "deploy to VPS", "rsync docker image").
