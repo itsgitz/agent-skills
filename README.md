@@ -1,8 +1,18 @@
 # agent-skills
 
+[![skills.sh](https://skills.sh/b/itsgitz/agent-skills)](https://skills.sh/itsgitz/agent-skills)
+
 Personal Claude Code skill collection by [Anggit M Ginanjar](https://github.com/itsgitz).
 
-Skills are reusable reference guides that help Claude agents apply proven techniques and patterns consistently across projects.
+Skills are reusable reference guides that help AI agents apply proven techniques and patterns consistently across projects.
+
+## Quick Install
+
+Install all skills from this repository at once:
+
+```bash
+npx skills add itsgitz/agent-skills
+```
 
 ## Skills
 
@@ -12,13 +22,15 @@ Skills are reusable reference guides that help Claude agents apply proven techni
 
 ## Usage
 
-Install a skill into your project:
+Install a specific skill into your project:
 
 ```bash
 npx skills add itsgitz/agent-skills/<skill-name>
 ```
 
-Once installed, Claude will automatically invoke the skill when relevant triggers are detected (e.g., "deploy to VPS", "rsync docker image").
+Once installed, your AI agent will automatically invoke the skill when relevant triggers are detected (e.g., "deploy to VPS", "rsync docker image").
+
+Skills from this repository are discoverable on [skills.sh](https://skills.sh/itsgitz/agent-skills).
 
 ## Adding Skills
 
