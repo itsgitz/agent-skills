@@ -2,9 +2,9 @@
 
 [![skills.sh](https://skills.sh/b/itsgitz/agent-skills)](https://skills.sh/itsgitz/agent-skills)
 
-Personal Claude Code skill collection by [Anggit M Ginanjar](https://github.com/itsgitz).
+Personal skill collection by [Anggit M Ginanjar](https://github.com/itsgitz).
 
-Skills are reusable reference guides that help AI agents apply proven techniques and patterns consistently across projects.
+Skills are reusable reference guides that help AI agents apply proven techniques and patterns consistently across projects. Compatible with any AI agent that supports `~/.agents` skills (Claude Code, Cursor, OpenCode, and more).
 
 ## Quick Install
 
