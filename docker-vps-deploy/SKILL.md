@@ -6,6 +6,7 @@ description: >
   gzip compression, and rsync to transfer images. Triggers: "deploy to VPS", "rsync
   docker image", "docker save and load", "VPS CI/CD", "SSH deploy pipeline",
   "deploy without registry", "transfer docker image via SSH".
+license: MIT
 ---
 
 # Docker VPS Deploy
