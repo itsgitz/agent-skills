@@ -5,7 +5,11 @@ Deploy a Dockerized application to a VPS via SSH — no container registry neede
 ## Install
 
 ```bash
+# Path syntax
 npx skills add itsgitz/agent-skills/docker-vps-deploy
+
+# Flag syntax
+npx skills add itsgitz/agent-skills -s docker-vps-deploy
 ```
 
 ## Triggers
