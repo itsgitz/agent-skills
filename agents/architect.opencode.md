@@ -13,9 +13,11 @@ permission:
   skill: allow
   websearch: allow
   todowrite: allow
-  webfetch: ask
-  edit: ask
-  bash: ask
+  webfetch: allow
+  edit: allow
+  bash:
+    "*": allow
+    "sudo *": ask
   doom_loop: ask
   external_directory: ask
   task:
