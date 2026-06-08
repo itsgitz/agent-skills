@@ -27,6 +27,18 @@ npx skills add itsgitz/agent-skills --skill docker-vps-deploy  # specific skill
 |-------|-------------|---------|
 | [docker-vps-deploy](./docker-vps-deploy/) | Deploy Dockerized app to VPS via SSH — no container registry, image travels as `.tar.gz` | `npx skills add itsgitz/agent-skills/docker-vps-deploy` |
 
+## Agents
+
+Agent definitions for AI coding tools — companion to skills. Each agent has a specific role with enforced boundaries between planning and execution.
+
+| Agent | Platform | Role |
+|-------|----------|------|
+| [architect-plan](./agents/architect.claude-plan.md) | Claude Code | Plan-only (read-only, opus) — writes documentation plan, hands off to architect-build |
+| [architect-build](./agents/architect.claude-build.md) | Claude Code | Build-only (sonnet) — executes plans from architect-plan |
+| [architect](./agents/architect.opencode.md) | OpenCode | Plan + build in one agent, gated on `execute`/`continue` |
+
+See [agents/README.md](./agents/README.md) for setup and workflow details.
+
 ## Usage
 
 Install a specific skill into your project — two equivalent syntaxes:

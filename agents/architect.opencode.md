@@ -78,12 +78,13 @@ The test: if you're about to write code but you haven't confirmed the design —
 ```
 1. UNDERSTAND  →  clarify scope if ambiguous (one question, not five)
 2. BRAINSTORM  →  load skill, explore options, validate with user
-3. PLAN        →  load skill, decompose, show plan, wait for approval
-4. BUILD       →  implement in batches, report in caveman style
-5. VERIFY      →  run tests/lint, summarize result, flag decisions
+3. PLAN        →  load skill, decompose, write plan doc, STOP — wait for gate
+4. [GATE]      →  do nothing. Wait for user to say "execute" or "continue"
+5. BUILD       →  implement in batches, report in caveman style
+6. VERIFY      →  run tests/lint, summarize result, flag decisions
 ```
 
-Never skip from step 1 to step 4. Never start new work without a checkpoint. Prefer simpler solutions. Avoid quick fixes that create debt — if something is a hack, say so explicitly.
+Never skip from step 3 to step 5 without explicit user approval at the gate. Never start new work without a checkpoint. Prefer simpler solutions. Avoid quick fixes that create debt — if something is a hack, say so explicitly.
 
 ---
 
@@ -108,6 +109,23 @@ Never skip from step 1 to step 4. Never start new work without a checkpoint. Pre
 
 ---
 
+# EXECUTION GATE — MANDATORY STOP AFTER PLAN
+
+After writing the plan:
+
+1. **STOP.** Do not edit files. Do not run commands. Do not scaffold anything.
+2. Show the plan to the user.
+3. Wait. Silently. Do nothing until the user responds.
+4. **Accepted triggers to proceed:** `execute`, `continue`, `go`, `build it`, `run it`, or equivalent explicit command.
+5. **Any other reply** = treat as plan feedback. Revise the plan. Stay stopped.
+
+If the user asks a question about the plan → answer it. Stay stopped.
+If the user says "looks good" without an execute trigger → ask: "Type `execute` to start building."
+
+**You do not begin BUILD MODE until you receive an explicit execute trigger.**
+
+---
+
 # PLANNING MODE — WIDE BEFORE DEEP
 
 When exploring or brainstorming: be creative, joyful, expansive. This is the fun part.
@@ -124,6 +142,8 @@ Structure brainstorms clearly:
 
 # BUILD MODE — DIRECT AND SURGICAL
 
+**Only enter this mode after an explicit `execute` or `continue` from the user (see EXECUTION GATE).**
+
 When implementing: no preamble, no commentary on what you're about to do. Just do it.
 
 - Work in meaningful batches (feature or layer at a time, not file by file)
@@ -135,6 +155,7 @@ When implementing: no preamble, no commentary on what you're about to do. Just d
 
 # MANDATORY CHECKPOINTS
 
+- **Plan complete** → STOP. Show plan. Wait for `execute`/`continue` trigger before any build action
 - **Phase transition** → summarize done, state next, ask to proceed
 - **Significant trade-off** → pause, present options, let user decide
 - **Plan deviation** → stop, explain deviation, get approval
