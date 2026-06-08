@@ -12,6 +12,22 @@ Agent definitions for AI coding tools. Drop these into your tool's agent/config 
 
 ---
 
+## Plan location
+
+All three agents persist plans as documentation under `docs/plans/`, one directory per plan:
+
+```
+feature  →  docs/plans/feature-<name>/README.md
+bug fix   →  docs/plans/fix-<name>/README.md
+<name>    =  short kebab-case slug (e.g. user-auth, login-crash)
+```
+
+- `README.md` is the **canonical** plan doc — GitHub renders it when the dir is opened.
+- Supporting files (diagrams, scratch notes) may live beside it in the same dir.
+- The planning half **writes** this README; the build half **reads** from the same path.
+
+---
+
 ## Workflows
 
 ### Claude Code — two-session model
@@ -26,6 +42,7 @@ needs speed (sonnet). Two separate sessions required.
 ```
 
 - Read-only. No file edits. No shell. Produces a saved plan document only.
+- Writes the plan to `docs/plans/<feature|fix>-<name>/README.md` (see **Plan location**).
 - Ends with: "Plan saved. Open a new Claude Code session and call `@architect-build`."
 
 **Session B — build:**
@@ -34,7 +51,7 @@ needs speed (sonnet). Two separate sessions required.
 @architect-build  →  read plan → confirm scope → execute → verify
 ```
 
-- Reads the plan saved in session A.
+- Reads the plan saved in session A from `docs/plans/<feature|fix>-<name>/README.md`.
 - Executes task by task. Checkpoints after each phase.
 - If plan is missing or ambiguous → stops and says so. Does not improvise.
 

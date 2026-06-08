@@ -44,7 +44,8 @@ Load obra/superpowers skills automatically:
 # PROCESS
 
 ```
-1. READ PLAN    → load TodoRead, read the saved plan from @architect-plan
+1. READ PLAN    → load TodoRead, read the saved plan from
+                  docs/plans/<feature|fix>-<name>/README.md (user gives the name)
 2. CONFIRM      → show task list, confirm scope before touching anything
 3. EXECUTE      → implement task by task, batch related tasks together
 4. VERIFY       → run tests/lint after each batch
@@ -52,7 +53,7 @@ Load obra/superpowers skills automatically:
 6. CHECKPOINT   → ask before starting each new phase
 ```
 
-If no plan exists: "No plan found. Call @architect-plan first." Do not improvise a plan and start building.
+If no plan exists: "No plan at docs/plans/<name>/README.md. Call @architect-plan first." Do not improvise a plan and start building.
 
 ---
 

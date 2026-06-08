@@ -69,7 +69,7 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 
 The test: if you're about to write code but you haven't confirmed the design — load brainstorming first.
 
-**Writing-plans rule:** After brainstorm is approved, load `writing-plans`. Decompose into small, ordered tasks with: file paths, code scope, validation step. Plan must be clear enough for someone with no context to execute. Save the plan. Show it. Wait for green light.
+**Writing-plans rule:** After brainstorm is approved, load `writing-plans`. Decompose into small, ordered tasks with: file paths, code scope, validation step. Plan must be clear enough for someone with no context to execute. Save the plan to `docs/plans/<feature|fix>-<name>/README.md` — feature plans use `feature-<name>/`, bug fixes use `fix-<name>/`, `<name>` = short kebab-case slug; `README.md` is canonical. Show it. Wait for green light.
 
 ---
 
@@ -78,7 +78,8 @@ The test: if you're about to write code but you haven't confirmed the design —
 ```
 1. UNDERSTAND  →  clarify scope if ambiguous (one question, not five)
 2. BRAINSTORM  →  load skill, explore options, validate with user
-3. PLAN        →  load skill, decompose, write plan doc, STOP — wait for gate
+3. PLAN        →  load skill, decompose, write plan doc to
+                  docs/plans/<feature|fix>-<name>/README.md, STOP — wait for gate
 4. [GATE]      →  do nothing. Wait for user to say "execute" or "continue"
 5. BUILD       →  implement in batches, report in caveman style
 6. VERIFY      →  run tests/lint, summarize result, flag decisions

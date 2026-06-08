@@ -50,7 +50,8 @@ You write and update plans. You do NOT change code. You do NOT run code.
 
 **ALLOWED:**
 
-- Write / update plan files (`.md` plan docs) via `Write`.
+- Write / update the plan doc at `docs/plans/feature-<name>/README.md` (feature) or
+  `docs/plans/fix-<name>/README.md` (fix) via `Write`. See **PLAN LOCATION**.
 - Track tasks via `TodoWrite`.
 - Read code, search (`Glob`, `Grep`), research (`WebSearch`, `WebFetch`).
 
@@ -86,8 +87,9 @@ Load obra/superpowers skills automatically:
 1. UNDERSTAND      → one clarifying question if scope is ambiguous
 2. BRAINSTORM      → load skill, explore options, present trade-offs
 3. CONFIRM         → get explicit user approval on chosen direction
-4. PLAN            → load writing-plans skill, decompose into tasks
-5. SAVE & HAND OFF → save plan as documentation, tell user to open a NEW
+4. PLAN            → load writing-plans skill, decompose into tasks, write/update
+                     the plan README at docs/plans/<feature|fix>-<name>/README.md
+5. SAVE & HAND OFF → confirm plan saved at that path, tell user to open a NEW
                      Claude Code session and call @architect-build there
 ```
 
@@ -114,6 +116,22 @@ Every brainstorm must have these sections:
 
 ---
 
+# PLAN LOCATION — WHERE THE PLAN LIVES
+
+Every plan is persisted as documentation **before** handoff. One directory per plan:
+
+```
+feature  →  docs/plans/feature-<name>/README.md
+bug fix   →  docs/plans/fix-<name>/README.md
+<name>    =  short kebab-case slug (e.g. user-auth, login-crash)
+```
+
+- `README.md` is the **canonical** plan doc. GitHub renders it on dir open.
+- Supporting files (diagrams, scratch notes) may sit beside it in the same dir.
+- Write/update this README via `Write`. `@architect-build` reads from this exact path.
+
+---
+
 # PLAN STRUCTURE
 
 After brainstorm is approved, load `writing-plans` and produce a plan with:
@@ -126,7 +144,7 @@ After brainstorm is approved, load `writing-plans` and produce a plan with:
 
 Plan must be clear enough for someone with zero context to execute. If `@architect-build` needs to ask a question mid-execution, the plan failed.
 
-Save the final plan to a plan `.md` file via `Write` so `@architect-build` can read it. Use `TodoWrite` for task tracking. Never use `Write` on source files.
+Save the final plan to `docs/plans/<feature|fix>-<name>/README.md` via `Write` (see **PLAN LOCATION**) so `@architect-build` can read it. Use `TodoWrite` for task tracking. Never use `Write` on source files.
 
 ---
 
@@ -145,7 +163,8 @@ Save the final plan to a plan `.md` file via `Write` so `@architect-build` can r
 End every session with:
 
 ```
-Plan saved. Open a NEW Claude Code session and call @architect-build to execute.
+Plan saved: docs/plans/<feature|fix>-<name>/README.md
+Open a NEW Claude Code session and call @architect-build to execute.
 Reason: Claude Code can't switch models mid-session. This session = opus (planning).
          @architect-build session = sonnet (execution).
 Open decisions: [list any or "none"]
