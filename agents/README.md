@@ -8,13 +8,15 @@ Agent definitions for AI coding tools. Drop these into your tool's agent/config 
 |-------|------|----------|-------|------|
 | architect-plan | `architect.claude-plan.md` | Claude Code | opus | Plan-only — never executes |
 | architect-build | `architect.claude-build.md` | Claude Code | sonnet | Build-only — executes saved plans |
-| architect | `architect.opencode.md` | OpenCode | configurable | Plan + build, gated |
+| architect | `architect.opencode.md` | OpenCode | configurable | Plan + build in one agent, gated |
+| architect-plan | `architect.opencode-plan.md` | OpenCode | configurable | Plan-only — `bash` denied, never executes |
+| architect-build | `architect.opencode-build.md` | OpenCode | configurable | Build-only — executes saved plans |
 
 ---
 
 ## Plan location
 
-All three agents persist plans as documentation under `docs/plans/`, one directory per plan:
+All agents persist plans as documentation under `docs/plans/`, one directory per plan:
 
 ```
 feature  →  docs/plans/feature-<name>/README.md
@@ -89,6 +91,34 @@ stays halted. If you say "looks good" without a trigger, the agent will prompt y
 
 ---
 
+### OpenCode — two-agent split (recommended)
+
+Same plan/build separation as Claude Code, but in one OpenCode session via Tab-switch. The
+gate is enforced by the **runtime**, not prose: `architect-plan` sets `bash: deny`, so it
+*cannot* run, test, or build anything. There is no build path to slide into.
+
+**Flow:**
+
+```
+architect-plan (primary)  →  brainstorm → design → write plan doc → STOP
+                                                    ↓
+                                  [user Tab-switches agent]
+                                                    ↓
+architect-build (primary) →  read plan → confirm scope → execute → verify
+```
+
+- `architect-plan`: read/search/research + writes the plan doc only. `bash` denied — no shell.
+  Ends with "Plan saved. Tab-switch to architect-build to execute."
+- `architect-build`: holds the execution tools (`edit`, `bash`) and build instructions.
+  Reads the plan from `docs/plans/<feature|fix>-<name>/README.md`. Refuses to start with no plan.
+
+**Why split?** The combined `architect` agent's gate is prose-only — it can leak into build
+after planning. Splitting removes the build instructions from the planning agent entirely and
+denies it shell, so the gate holds. The combined `architect` agent remains for users who
+prefer a single conversation.
+
+---
+
 ## Install
 
 Copy the relevant file into your tool's agent directory:
@@ -106,14 +136,22 @@ curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/arc
 **OpenCode** — place in `~/.opencode/agents/` or `.opencode/agents/` in your project:
 
 ```bash
+# combined agent (plan + build in one, gated)
 curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.opencode.md
+
+# two-agent split (recommended)
+curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.opencode-plan.md
+curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.opencode-build.md
 ```
 
 ---
 
 ## Notes
 
-- Caveman mode is always on for all three agents — terse, no filler, full technical substance.
+- Caveman mode is always on for every agent — terse, no filler, full technical substance.
 - All agents load superpowers skills automatically when context matches (`brainstorming`,
   `writing-plans`, `systematic-debugging`).
-- `architect-build` will refuse to start if no plan exists — it won't improvise a design.
+- `architect-build` (both platforms) will refuse to start if no plan exists — it won't improvise a design.
+- The split OpenCode `architect-plan` enforces the no-execution gate via `bash: deny` (machine-level),
+  not just prose — it physically cannot run shell.
+- TDD is a hard gate for every agent: every code change follows test-first (Red→Green→Refactor) via the `test-driven-development` skill. Pure docs/config tasks are exempt.
