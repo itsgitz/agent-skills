@@ -144,6 +144,31 @@ curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/arc
 curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.opencode-build.md
 ```
 
+### Script install (alternative)
+
+Fetches the same files from GitHub raw over the network — no clone required. Interactive by
+default, with flags for scripting.
+
+```bash
+# interactive picker
+python3 scripts/install_agents.py
+
+# or without cloning the repo:
+curl -fsSL https://raw.githubusercontent.com/itsgitz/agent-skills/master/scripts/install_agents.py | python3 -
+
+# non-interactive examples
+python3 scripts/install_agents.py --platform claude --scope project --yes
+python3 scripts/install_agents.py --platform opencode --variant split --scope global --yes
+
+# preview without writing anything
+python3 scripts/install_agents.py --platform opencode --variant combined --scope global --dry-run
+```
+
+Flags: `--platform {claude,opencode}`, `--variant {combined,split}` (OpenCode only — Claude Code
+always installs the plan/build split), `--scope {global,project}`, `--yes` (skip confirmation;
+skip existing files instead of prompting), `--force` (overwrite existing files), `--dry-run`
+(print planned actions; fetches and writes nothing). Omit any flag to be prompted for it.
+
 ---
 
 ## Notes
