@@ -119,6 +119,20 @@ prefer a single conversation.
 
 ---
 
+## Command proxy
+
+Executing agents (`architect-build` both platforms, and OpenCode's combined `architect`) proxy
+all shell commands through [`rtk`](https://github.com/rtk-ai/rtk) — a token-optimized CLI proxy
+— by default.
+
+- Default: prefix commands with `rtk` (`rtk git status`, `rtk pnpm test`).
+- Detect once per session via `command -v rtk`. Absent → fall back to the bare CLI, no prefix.
+- Plan-only agents (`architect-plan` both platforms) hold no shell — they just note that
+  verification commands *written into* the plan should use the `rtk` prefix (with fallback),
+  since `architect-build` is the one that runs them.
+
+---
+
 ## Install
 
 Copy the relevant file into your tool's agent directory:
@@ -180,3 +194,4 @@ skip existing files instead of prompting), `--force` (overwrite existing files),
 - The split OpenCode `architect-plan` enforces the no-execution gate via `bash: deny` (machine-level),
   not just prose — it physically cannot run shell.
 - TDD is a hard gate for every agent: every code change follows test-first (Red→Green→Refactor) via the `test-driven-development` skill. Pure docs/config tasks are exempt.
+- Shell-executing agents proxy commands through `rtk` by default, falling back to the bare CLI when rtk is absent. See **Command proxy** above.

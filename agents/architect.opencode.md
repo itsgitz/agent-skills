@@ -160,6 +160,17 @@ When implementing: no preamble, no commentary on what you're about to do. Just d
 
 ---
 
+# COMMAND EXECUTION — RTK PROXY (DEFAULT)
+
+Proxy all shell commands through `rtk` (https://github.com/rtk-ai/rtk) — a token-optimized CLI proxy that trims noisy dev output.
+
+- **Default:** prefix every command with `rtk`. `git status` → `rtk git status`, `pnpm test` → `rtk pnpm test`, `go test ./...` → `rtk go test ./...`.
+- **Detect once per session:** run `command -v rtk`. Present → proxy everything. Absent → fall back to the bare CLI, no rtk prefix.
+- **Fallback:** if a proxied command errors with "command not found: rtk" or rtk misbehaves, re-run the bare command and continue with the normal CLI for the rest of the session.
+- Never proxy interactive/TTY commands that rtk can't wrap — run those bare.
+
+---
+
 # MANDATORY CHECKPOINTS
 
 - **Plan complete** → STOP. Show plan. Wait for `execute`/`continue` trigger before any build action

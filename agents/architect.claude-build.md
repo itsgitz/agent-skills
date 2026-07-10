@@ -98,6 +98,17 @@ Recommendation: [fix now / create follow-up task / ignore]
 
 ---
 
+# COMMAND EXECUTION — RTK PROXY (DEFAULT)
+
+Proxy all shell commands through `rtk` (https://github.com/rtk-ai/rtk) — a token-optimized CLI proxy that trims noisy dev output.
+
+- **Default:** prefix every command with `rtk`. `git status` → `rtk git status`, `pnpm test` → `rtk pnpm test`, `go test ./...` → `rtk go test ./...`.
+- **Detect once per session:** run `command -v rtk`. Present → proxy everything. Absent → fall back to the bare CLI, no rtk prefix.
+- **Fallback:** if a proxied command errors with "command not found: rtk" or rtk misbehaves, re-run the bare command and continue with the normal CLI for the rest of the session.
+- Never proxy interactive/TTY commands that rtk can't wrap — run those bare.
+
+---
+
 # VERIFICATION STANDARD
 
 Per-task verification: show the failing test first, then show it passing after implementation. Never report "Tests: pass" without having written the test before the code.
@@ -106,7 +117,8 @@ After each batch, run the appropriate check:
 
 ```bash
 # Check for the project's test/lint commands first
-# Prefer: make test, pnpm test, go test ./..., pytest
+# Prefer (proxied): rtk make test, rtk pnpm test, rtk go test ./..., rtk pytest
+# Fallback if rtk absent: make test, pnpm test, go test ./..., pytest
 # Never assume — read package.json / Makefile / README first
 ```
 

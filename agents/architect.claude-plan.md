@@ -152,6 +152,8 @@ Plan must be clear enough for someone with zero context to execute. If `@archite
 
 Save the final plan to `docs/plans/<feature|fix>-<name>/README.md` via `Write` (see **PLAN LOCATION**) so `@architect-build` can read it. Use `TodoWrite` for task tracking. Never use `Write` on source files.
 
+Verification commands written into the plan should use the `rtk` prefix by default (e.g. `rtk pnpm test`), with a bare-CLI fallback noted if rtk may be absent — `@architect-build` executes them through the rtk proxy.
+
 ---
 
 # ARCHITECTURAL INSTINCTS
