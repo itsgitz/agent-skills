@@ -197,6 +197,10 @@ skip existing files instead of prompting), `--force` (overwrite existing files),
 - Caveman mode is always on for every agent — terse, no filler, full technical substance.
 - All agents load superpowers skills automatically when context matches (`brainstorming`,
   `writing-plans`, `systematic-debugging`).
+- All agents also auto-load [`ponytail`](https://github.com/DietrichGebert/ponytail) (external
+  skill, install separately) for lazy/minimal output — plan agents design lazily (YAGNI),
+  build agents build lazily (reuse/stdlib/native/dep before new code). TDD gate still wins on
+  *whether* to test; ponytail only governs *how much* code to write.
 - `architect-build` (both platforms) will refuse to start if no plan exists — it won't improvise a design.
 - The split OpenCode `architect-plan` enforces the no-execution gate via `bash: deny` (machine-level),
   not just prose — it physically cannot run shell.

@@ -65,6 +65,7 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 | Bug, unexpected behavior, unclear failure    | `systematic-debugging`    |
 | Need isolated environment for a feature      | `using-git-worktrees`     |
 | Implementing ANY feature or bugfix (always)  | `test-driven-development` |
+| Designing or writing ANY code (always)       | `ponytail` — YAGNI + the ladder, reuse over new code |
 
 **Brainstorming rule (non-negotiable):** If a user asks to build/create/implement something and no plan exists yet — STOP. Load `brainstorming`. Ask clarifying questions. Explore alternatives. Present design in sections. Get approval. Then continue.
 
@@ -73,6 +74,8 @@ The test: if you're about to write code but you haven't confirmed the design —
 **Writing-plans rule:** After brainstorm is approved, load `writing-plans`. Decompose into small, ordered tasks with: file paths, code scope, validation step. Plan must be clear enough for someone with no context to execute. Save the plan to `docs/plans/<feature|fix>-<name>/README.md` — feature plans use `feature-<name>/`, bug fixes use `fix-<name>/`, `<name>` = short kebab-case slug; `README.md` is canonical. Show it. Wait for green light.
 
 **TDD rule (non-negotiable):** All code changes follow test-first. In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
+
+**TDD vs ponytail:** TDD rule governs *whether* to test (always, for code) — it wins over ponytail's "trivial one-liners need no test". Ponytail governs *how much* code/abstraction to write. No conflict: test-first always, but write the laziest implementation that passes.
 
 ---
 

@@ -112,6 +112,7 @@ bug fix   →  docs/plans/fix-<name>/README.md
 - **TDD gate** — every code change follows test-first (Red→Green→Refactor) via the `test-driven-development` skill. Pure docs/config tasks are exempt.
 - **Command proxy** — shell-executing agents (`architect-build` both platforms, OpenCode combined `architect`) prefix commands with [`rtk`](https://github.com/rtk-ai/rtk) by default. Detect once per session via `command -v rtk`; fall back to the bare CLI when absent.
 - **Superpowers** — agents auto-load `brainstorming`, `writing-plans`, `systematic-debugging` when context matches.
+- **Ponytail** — agents auto-load [`ponytail`](https://github.com/DietrichGebert/ponytail) (external skill, install separately): plan agents design lazily (YAGNI, fewest files), build agents build lazily (the ladder: reuse/stdlib/native/dep before new code). TDD gate wins on *whether* to test; ponytail governs *how much* code to write.
 - **Caveman mode** — always on: terse, no filler, full technical substance.
 
 ### Editing agent files

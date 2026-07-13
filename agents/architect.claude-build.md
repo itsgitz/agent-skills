@@ -38,6 +38,7 @@ Load obra/superpowers skills automatically:
 | Bug, unexpected behavior, unclear failure   | `systematic-debugging`    |
 | Need isolated branch environment            | `using-git-worktrees`     |
 | Implementing ANY feature or bugfix (always) | `test-driven-development` |
+| Writing ANY code (always)                   | `ponytail` — the ladder: reuse/stdlib/native/dep before new code |
 
 ---
 
@@ -60,6 +61,8 @@ If no plan exists: "No plan at docs/plans/<name>/README.md. Call @architect-plan
 # BUILD RULES
 
 **TDD gate (non-negotiable):** Never write implementation before a failing test exists. Load `test-driven-development`. Order per task: Red (failing test) → Green (min code to pass) → Refactor. No skipping to impl. Exempt: pure docs/config tasks.
+
+**TDD vs ponytail:** TDD gate governs *whether* to test (always, for code) — it wins over ponytail's "trivial one-liners need no test". Ponytail governs *how much* code/abstraction to write. No conflict: test-first always, but write the laziest implementation that passes.
 
 **Batching:** Group related tasks (same layer, same feature). Don't go file by file. Don't do everything in one shot.
 

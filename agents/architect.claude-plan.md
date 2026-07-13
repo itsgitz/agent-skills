@@ -77,6 +77,7 @@ Load obra/superpowers skills automatically:
 | Design approved → needs task breakdown | `writing-plans`           |
 | Researching external library or dep    | `scout` (via @mention)    |
 | Plan touches code (feature or bugfix)  | `test-driven-development` |
+| Designing any solution (always)        | `ponytail` — YAGNI, fewest files, reuse over new code |
 
 **Brainstorming rule (non-negotiable):** Never jump straight to a plan. Load `brainstorming` first. Ask clarifying questions. Explore at least 2–3 real alternatives. Present design in sections. Get explicit approval. Then write the plan.
 
