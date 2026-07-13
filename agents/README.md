@@ -46,6 +46,8 @@ needs speed (sonnet). Two separate sessions required.
 - Read-only. No file edits. No shell. Produces a saved plan document only.
 - Writes the plan to `docs/plans/<feature|fix>-<name>/README.md` (see **Plan location**).
 - Ends with: "Plan saved. Open a new Claude Code session and call `@architect-build`."
+- To build with a different model/tool instead (DeepSeek V4 Pro, GLM 5.2, etc.), invoke
+  `/generate-execute-prompt` for a portable, model-agnostic execution prompt.
 
 **Session B — build:**
 
@@ -89,6 +91,9 @@ Any other reply (questions, feedback, "looks good") → agent treats it as plan 
 stays halted. If you say "looks good" without a trigger, the agent will prompt you:
 `"Type execute to start building."`
 
+To build with a different model/tool instead (DeepSeek V4 Pro, GLM 5.2, etc.), invoke
+`/generate-execute-prompt` for a portable, model-agnostic execution prompt.
+
 ---
 
 ### OpenCode — two-agent split (recommended)
@@ -111,6 +116,8 @@ architect-build (primary) →  read plan → confirm scope → execute → verif
   Ends with "Plan saved. Tab-switch to architect-build to execute."
 - `architect-build`: holds the execution tools (`edit`, `bash`) and build instructions.
   Reads the plan from `docs/plans/<feature|fix>-<name>/README.md`. Refuses to start with no plan.
+- To build with a different model/tool instead (DeepSeek V4 Pro, GLM 5.2, etc.), invoke
+  `/generate-execute-prompt` for a portable, model-agnostic execution prompt.
 
 **Why split?** The combined `architect` agent's gate is prose-only — it can leak into build
 after planning. Splitting removes the build instructions from the planning agent entirely and
