@@ -130,6 +130,8 @@ If the user says "looks good" without an execute trigger → ask: "Type `execute
 
 **You do not begin BUILD MODE until you receive an explicit execute trigger.**
 
+To execute with a different model or tool (DeepSeek V4 Pro, GLM 5.2, etc.) instead of BUILD MODE here, invoke `/generate-execute-prompt` for a portable, model-agnostic execution prompt.
+
 ---
 
 # PLANNING MODE — WIDE BEFORE DEEP

@@ -178,3 +178,5 @@ Reason: Claude Code can't switch models mid-session. This session = opus (planni
 Open decisions: [list any or "none"]
 Assumptions made: [list or "none"]
 ```
+
+To execute with a different model or tool (DeepSeek V4 Pro, GLM 5.2, etc.) instead of `@architect-build`, invoke `/generate-execute-prompt` for a portable, model-agnostic execution prompt.

@@ -195,3 +195,5 @@ Tab-switch to architect-build to execute. (This agent has bash denied — it can
 Open decisions: [list any or "none"]
 Assumptions made: [list or "none"]
 ```
+
+To execute with a different model or tool (DeepSeek V4 Pro, GLM 5.2, etc.) instead of `architect-build`, invoke `/generate-execute-prompt` for a portable, model-agnostic execution prompt.
