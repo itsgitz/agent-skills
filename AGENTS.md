@@ -93,6 +93,7 @@ The core design: planning and execution are separated so a planning agent can't 
 - **Claude Code** — two sessions (can't hot-swap models): `@architect-plan` on opus writes the plan, then a fresh `@architect-build` session on sonnet executes it.
 - **OpenCode combined** — one agent, prose gate. Halts after writing the plan; resumes build only on `execute` / `continue` / `go` / `build it` / `run it`.
 - **OpenCode split (recommended)** — Tab-switch between two agents. `architect-plan` sets `bash: deny`, so the no-execution gate is machine-enforced, not prose.
+- **Any model/tool** — use the `generate-execute-prompt` skill to produce a portable prompt that can execute the plan in a different model, tool, or fresh session.
 
 ### Plan location convention
 
