@@ -4,11 +4,12 @@ This file provides guidance to Claude Code (<https://claude.ai/code>) and OpenCo
 
 ## What This Repo Is
 
-Collection of Claude Code skills — Markdown reference guides that Claude agents invoke when specific triggers are detected. Skills are installed into projects via `npx skills add itsgitz/agent-skills/<skill-name>`.
+Two companion collections for AI coding tools:
 
-## Skill Structure
+- **Skills** — Markdown reference guides that agents invoke when specific triggers are detected. Installed via `npx skills add itsgitz/agent-skills/<skill-name>`.
+- **Agents** — agent role definitions (the `architect` family) for Claude Code and OpenCode, with an enforced plan/build split. Installed by copying files or running `scripts/install_agents.py`.
 
-Each skill lives at `<skill-name>/SKILL.md` (flat, no nesting):
+## Repo Layout
 
 ```
 agent-skills/
@@ -16,12 +17,26 @@ agent-skills/
     SKILL.md        # required — YAML frontmatter + skill body
     README.md       # required — install command + trigger list
     supporting.*    # optional — extra reference docs, templates
+  agents/
+    architect.claude-plan.md    # Claude Code plan-only (opus)
+    architect.claude-build.md   # Claude Code build-only (sonnet)
+    architect.opencode.md       # OpenCode combined (plan+build, gated)
+    architect.opencode-plan.md  # OpenCode plan-only (bash denied)
+    architect.opencode-build.md # OpenCode build-only
+    README.md       # agent setup + workflow docs
+  scripts/
+    install_agents.py           # fetch + install agent files from GitHub raw
   docs/
+    adding-skills.md            # skill authoring checklist
   README.md
   LICENSE
 ```
 
-## SKILL.md Frontmatter Rules
+---
+
+## Skills
+
+### SKILL.md Frontmatter Rules
 
 ```yaml
 ---
@@ -36,11 +51,11 @@ license: MIT
 - List concrete triggers (user phrases, symptoms), not workflow summaries
 - Third person — it's injected as a system prompt
 
-## Required Sections in SKILL.md
+### Required Sections in SKILL.md
 
 Every skill needs: **Overview**, **When to Use**, **When NOT to Use**, at least one code example.
 
-## Adding a New Skill
+### Adding a New Skill
 
 1. Create `<skill-name>/SKILL.md` with valid frontmatter
 2. Create `<skill-name>/README.md` with install command and trigger list
@@ -48,7 +63,7 @@ Every skill needs: **Overview**, **When to Use**, **When NOT to Use**, at least 
 
 See `docs/adding-skills.md` for the full checklist.
 
-## Checklist Before Committing a Skill
+### Checklist Before Committing a Skill
 
 - [ ] Name: letters, numbers, hyphens only
 - [ ] Frontmatter has `name`, `description`, `license`
@@ -56,3 +71,65 @@ See `docs/adding-skills.md` for the full checklist.
 - [ ] `SKILL.md` has Overview, When to Use, When NOT to Use, code example
 - [ ] `README.md` has install command and trigger list
 - [ ] Row added to root `README.md` skills table
+
+---
+
+## Agents
+
+Agent files live flat in `agents/`, named `architect.<platform>-<role>.md`:
+
+| File | Platform | Role |
+|------|----------|------|
+| `architect.claude-plan.md` | Claude Code | Plan-only (opus) — read-only, never executes |
+| `architect.claude-build.md` | Claude Code | Build-only (sonnet) — executes saved plans |
+| `architect.opencode.md` | OpenCode | Combined plan+build in one agent, prose-gated |
+| `architect.opencode-plan.md` | OpenCode | Plan-only — `bash: deny`, gate enforced by runtime |
+| `architect.opencode-build.md` | OpenCode | Build-only — executes saved plans |
+
+### Plan / Build Split
+
+The core design: planning and execution are separated so a planning agent can't slide into building.
+
+- **Claude Code** — two sessions (can't hot-swap models): `@architect-plan` on opus writes the plan, then a fresh `@architect-build` session on sonnet executes it.
+- **OpenCode combined** — one agent, prose gate. Halts after writing the plan; resumes build only on `execute` / `continue` / `go` / `build it` / `run it`.
+- **OpenCode split (recommended)** — Tab-switch between two agents. `architect-plan` sets `bash: deny`, so the no-execution gate is machine-enforced, not prose.
+
+### Plan location convention
+
+All agents persist plans as documentation under `docs/plans/`, one directory per plan:
+
+```
+feature  →  docs/plans/feature-<name>/README.md
+bug fix   →  docs/plans/fix-<name>/README.md
+<name>    =  short kebab-case slug (e.g. user-auth, login-crash)
+```
+
+`README.md` is the canonical plan doc. The plan half writes it; the build half reads from the same path and refuses to start if it's missing.
+
+### Cross-cutting agent rules
+
+- **TDD gate** — every code change follows test-first (Red→Green→Refactor) via the `test-driven-development` skill. Pure docs/config tasks are exempt.
+- **Command proxy** — shell-executing agents (`architect-build` both platforms, OpenCode combined `architect`) prefix commands with [`rtk`](https://github.com/rtk-ai/rtk) by default. Detect once per session via `command -v rtk`; fall back to the bare CLI when absent.
+- **Superpowers** — agents auto-load `brainstorming`, `writing-plans`, `systematic-debugging` when context matches.
+- **Caveman mode** — always on: terse, no filler, full technical substance.
+
+### Editing agent files
+
+When changing an agent's behavior, keep these in sync:
+- The agent `.md` file(s) themselves
+- `agents/README.md` (workflow + notes)
+- Root `README.md` Agents table
+- `scripts/install_agents.py` if a file is added/renamed (see `AGENT_FILES` map)
+
+---
+
+## Install Script
+
+`scripts/install_agents.py` fetches agent files from GitHub raw (no clone needed) and writes them into the tool's agent dir. Interactive by default; flags for scripting:
+
+- `--platform {claude,opencode}`
+- `--variant {combined,split}` (OpenCode only — Claude Code is always split)
+- `--scope {global,project}` (`~/.claude` or `~/.opencode` vs. cwd)
+- `--yes` (skip confirm; skip existing files), `--force` (overwrite), `--dry-run` (preview only)
+
+The `AGENT_FILES` map keys `(platform, variant)` → filename list. Update it when agent files change.
