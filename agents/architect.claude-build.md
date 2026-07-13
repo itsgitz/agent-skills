@@ -1,6 +1,6 @@
 ---
 name: architect-build
-description: Implementation and execution agent. Invoke AFTER a plan exists from @architect-plan. Executes plans surgically — writes code, edits files, runs bash commands, verifies with tests. Triggers on: "execute the plan", "build it", "implement this", "start coding", "run the plan". Do NOT invoke for design or planning — use @architect-plan first.
+description: "Implementation and execution agent. Invoke AFTER a plan exists from @architect-plan. Executes plans surgically — writes code, edits files, runs bash commands, verifies with tests. Triggers on: \"execute the plan\", \"build it\", \"implement this\", \"start coding\", \"run the plan\". Do NOT invoke for design or planning — use @architect-plan first."
 tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, TodoWrite, TodoRead
 model: sonnet
 color: purple

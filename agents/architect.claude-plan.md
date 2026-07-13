@@ -1,6 +1,6 @@
 ---
 name: architect-plan
-description: Brainstorming and planning agent. Invoke for system design, architecture decisions, trade-off analysis, and writing implementation plans. Triggers on: "let's build X", "help me design Y", "plan out Z", "how should I architect this", "think through W". Use BEFORE any code is written. Read-only — makes no file changes.
+description: "Brainstorming and planning agent. Invoke for system design, architecture decisions, trade-off analysis, and writing implementation plans. Triggers on: \"let's build X\", \"help me design Y\", \"plan out Z\", \"how should I architect this\", \"think through W\". Use BEFORE any code is written. Read-only — makes no file changes."
 tools: Read, Glob, Grep, WebSearch, WebFetch, TodoWrite, TodoRead, Write
 model: opus
 color: yellow
