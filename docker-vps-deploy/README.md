@@ -13,6 +13,12 @@ npx skills add itsgitz/agent-skills --skill docker-vps-deploy
 npx skills add itsgitz/agent-skills -s docker-vps-deploy
 ```
 
+## Update
+
+```bash
+npx skills update docker-vps-deploy
+```
+
 ## Triggers
 
 Claude invokes this skill when you ask about:

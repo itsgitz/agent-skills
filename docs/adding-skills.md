@@ -45,7 +45,7 @@ description: >
 - [ ] Description contains no workflow summary
 - [ ] `SKILL.md` has an Overview, When to Use, and at least one code example
 - [ ] Skill directory added to the table in root `README.md`
-- [ ] Skill `README.md` created with install command and trigger list
+- [ ] Skill `README.md` created with install command, update command, and trigger list
 
 ## Updating README.md
 

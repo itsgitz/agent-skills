@@ -16,6 +16,12 @@ npx skills add itsgitz/agent-skills --skill generate-execute-prompt
 npx skills add itsgitz/agent-skills -s generate-execute-prompt
 ```
 
+## Update
+
+```bash
+npx skills update generate-execute-prompt
+```
+
 ## Triggers
 
 Claude invokes this skill when you ask about:
