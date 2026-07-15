@@ -174,6 +174,8 @@ Proxy all shell commands through `rtk` (https://github.com/rtk-ai/rtk) — a tok
 - **Fallback:** if a proxied command errors with "command not found: rtk" or rtk misbehaves, re-run the bare command and continue with the normal CLI for the rest of the session.
 - Never proxy interactive/TTY commands that rtk can't wrap — run those bare.
 
+**Long-running commands (OpenCode bash cap):** OpenCode's bash tool terminates a call after its timeout and gives no background-completion callback. Do NOT `cmd &` then `sleep N && ps` — the poll is killed at the cap and loops. Instead: run the command in a single foreground call with the tool's `timeout` raised (e.g. `timeout: 600000` for a 10-min coverage run), or redirect to a log in one call and read the log once. Reserve backgrounding for fire-and-forget only, never for work you must wait on.
+
 ---
 
 # MANDATORY CHECKPOINTS

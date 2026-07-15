@@ -128,6 +128,13 @@ Execution rules:
   access your environment provides. If a command is prefixed with a proxy
   tool (e.g. `rtk`) that isn't available in your environment, drop the
   prefix and run the bare command instead.
+- For long-running commands (test suites, coverage, builds), run them in a
+  single foreground call and give them enough time to finish. Do not
+  background a process (`&`) and then poll it with repeated `sleep`/`ps` —
+  many tools cap per-command time and give no completion callback, so
+  polling loops forever. If your tool caps command duration, either raise
+  that call's timeout, or write output to a log file in one call and read
+  the log once afterward.
 
 ## Plan
 
