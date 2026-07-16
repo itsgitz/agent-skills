@@ -27,6 +27,7 @@ npx skills add itsgitz/agent-skills --skill docker-vps-deploy  # specific skill
 |-------|-------------|---------|
 | [docker-vps-deploy](./docker-vps-deploy/) | Deploy Dockerized app to VPS via SSH — no container registry, image travels as `.tar.gz` | `npx skills add itsgitz/agent-skills/docker-vps-deploy` |
 | [generate-execute-prompt](./generate-execute-prompt/) | Turn an approved plan into a portable, model-agnostic execution prompt to run in another model (DeepSeek, GLM, fresh session) | `npx skills add itsgitz/agent-skills/generate-execute-prompt` |
+| [git-ticket](./git-ticket/) | Generate + create a GitHub/GitLab issue/PR/MR from your context, with house title-format support and markdown fallback | `npx skills add itsgitz/agent-skills/git-ticket` |
 
 ## Agents
 
