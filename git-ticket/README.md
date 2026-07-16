@@ -47,8 +47,10 @@ put a single template line in `.git-ticket-format` at the repo root:
   context (branch, changed dir, the case text) or asked once. No raw
   placeholder ever ships in the final title.
 
-No config file? The skill infers the pattern from your recent issues/PRs/MRs
-on the remote, then falls back to the commit subject.
+No config file? The skill **asks** you for the format, pre-filling a pattern
+inferred from your recent issues/PRs/MRs on the remote as the suggested
+default. Give one and it offers to save it to `.git-ticket-format` so it
+stops asking; skip it and the title defaults to the commit subject.
 
 ## Fallback
 

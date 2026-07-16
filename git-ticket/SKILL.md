@@ -83,7 +83,7 @@ From user intent:
 
 ### 4. Resolve the title
 
-Lookup order — stop at the first that yields a template:
+Resolution order — stop at the first that yields a title:
 
 1. **Repo config file** `.git-ticket-format` at repo root. One template line,
    shared across forges and item types, e.g.:
@@ -92,10 +92,18 @@ Lookup order — stop at the first that yields a template:
    [API/{MODULE}] {title}
    ```
 
-2. **Infer from recent remote items** if no config file:
-   `gh issue list -L 10` / `gh pr list -L 10` /
-   `glab issue list` / `glab mr list`. If a clear prefix pattern emerges
-   (e.g. most titles start `[API/...]`), reuse it.
+   Present → use it directly, no prompt.
+
+2. **No config file → ask the user for the format.** Pre-fill the suggested
+   default with a pattern **inferred from recent remote items**
+   (`gh issue list -L 10` / `gh pr list -L 10` /
+   `glab issue list` / `glab mr list` — if most titles share a prefix like
+   `[API/...]`, propose it). The user accepts, edits, or skips.
+   - **They give a format** → use it, then **offer once to save it** to
+     `.git-ticket-format` at repo root so future runs skip the ask. On yes,
+     write the single template line. Don't nag if they decline.
+   - **They skip / leave it blank** → fall through to step 3.
+
 3. **Default** — the commit subject: `git log -1 --pretty=%s`.
 
 **Placeholders in the template:**
@@ -148,7 +156,8 @@ confirmed every time, with no exceptions.
 
 | Mistake | Fix |
 |---|---|
-| Plain descriptive title, ignoring house style | Run the step-4 lookup: config file → infer from remote → commit subject |
+| Plain descriptive title, ignoring house style | Run step 4: config file → ask (suggest inferred) → commit subject |
+| Silently defaulting to the commit subject when no config | Ask the user for the format first (pre-fill the inferred pattern); only default if they skip |
 | Leaving a raw `{MODULE}` in the title | Fill from context or ask once; never ship a literal placeholder |
 | Creating immediately without a draft | Always show title + body and confirm first |
 | Hard-failing when `gh`/`glab` missing | Fall back to markdown for manual creation |
