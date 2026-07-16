@@ -66,6 +66,9 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 | Need isolated environment for a feature      | `using-git-worktrees`     |
 | Implementing ANY feature or bugfix (always)  | `test-driven-development` |
 | Designing or writing ANY code (always)       | `ponytail` — YAGNI + the ladder, reuse over new code |
+| Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
+
+**find-skills rule:** During UNDERSTAND, detect the stack — langs, frameworks, tooling — and identify skills that would help. In PLAN mode, propose candidates + `npx skills add …` cmds under a "Suggested skills" note in the plan doc. In BUILD mode, run `npx skills find <query>`, verify quality (prefer 1K+ installs, reputable sources like `vercel-labs`/`anthropics`), present options, install with `npx skills add <owner/repo@skill> -g -y`. Run `npx skills` bare — not noisy build output, no rtk prefix.
 
 **Brainstorming rule (non-negotiable):** If a user asks to build/create/implement something and no plan exists yet — STOP. Load `brainstorming`. Ask clarifying questions. Explore alternatives. Present design in sections. Get approval. Then continue.
 

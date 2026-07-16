@@ -78,6 +78,9 @@ Load obra/superpowers skills automatically:
 | Researching external library or dep    | `scout` (via @mention)    |
 | Plan touches code (feature or bugfix)  | `test-driven-development` |
 | Designing any solution (always)        | `ponytail` — YAGNI, fewest files, reuse over new code |
+| Starting on a project → match skills to stack | `find-skills` — detect stack, recommend skills + install cmds in the plan (no bash here — recommend only) |
+
+**find-skills rule:** During UNDERSTAND, detect the stack — langs, frameworks, tooling — and identify skills that would help. This agent has **no bash** — it cannot run `npx skills find` and cannot verify install counts. So propose candidate skills and write their `npx skills add <owner/repo@skill>` commands into the plan doc under a "Suggested skills" note. `@architect-build` (or the user) runs `npx skills find` to verify quality before installing.
 
 **Brainstorming rule (non-negotiable):** Never jump straight to a plan. Load `brainstorming` first. Ask clarifying questions. Explore at least 2–3 real alternatives. Present design in sections. Get explicit approval. Then write the plan.
 

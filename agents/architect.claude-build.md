@@ -39,6 +39,9 @@ Load obra/superpowers skills automatically:
 | Need isolated branch environment            | `using-git-worktrees`     |
 | Implementing ANY feature or bugfix (always) | `test-driven-development` |
 | Writing ANY code (always)                   | `ponytail` — the ladder: reuse/stdlib/native/dep before new code |
+| Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
+
+**find-skills rule:** During READ PLAN (or when a capability gap shows), run `npx skills find <query>` for the plan's "Suggested skills" and detected stack. Verify quality (prefer 1K+ installs, reputable sources like `vercel-labs`/`anthropics`), present options, then offer to install with `npx skills add <owner/repo@skill> -g -y`. Run `npx skills` bare — not noisy build output, no rtk prefix.
 
 ---
 

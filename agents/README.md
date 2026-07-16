@@ -201,6 +201,7 @@ skip existing files instead of prompting), `--force` (overwrite existing files),
   skill, install separately) for lazy/minimal output — plan agents design lazily (YAGNI),
   build agents build lazily (reuse/stdlib/native/dep before new code). TDD gate still wins on
   *whether* to test; ponytail only governs *how much* code to write.
+- All agents auto-load [`find-skills`](https://skills.sh/) to match installable skills to the project stack. Build agents + combined `architect` have bash → run `npx skills find` and offer to install. Plan agents (`architect-plan` both platforms) have no bash → they recommend skills and write the `npx skills add …` install commands into the plan doc for the build half or user to run.
 - `architect-build` (both platforms) will refuse to start if no plan exists — it won't improvise a design.
 - The split OpenCode `architect-plan` enforces the no-execution gate via `bash: deny` (machine-level),
   not just prose — it physically cannot run shell.
