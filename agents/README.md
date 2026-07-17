@@ -32,10 +32,12 @@ bug fix   →  docs/plans/fix-<name>/README.md
 
 ## Workflows
 
-### Claude Code — two-session model
+### Claude Code — plan/build split
 
-Claude Code cannot switch models mid-session. Planning needs deep reasoning (opus); execution
-needs speed (sonnet). Two separate sessions required.
+Planning needs deep reasoning (opus); execution needs speed (sonnet). These are two agents, not
+two mandatory sessions: subagents honor their own `model:`, so an opus session can spawn
+`@architect-build` as a sonnet subagent. The split is a role boundary — `architect-plan` never
+executes — enforced by giving it no shell/edit tools, not by session separation.
 
 **Session A — plan:**
 
@@ -45,9 +47,13 @@ needs speed (sonnet). Two separate sessions required.
 
 - Read-only. No file edits. No shell. Produces a saved plan document only.
 - Writes the plan to `docs/plans/<feature|fix>-<name>/README.md` (see **Plan location**).
-- Ends with: "Plan saved. Open a new Claude Code session and call `@architect-build`."
-- To build with a different model/tool instead (DeepSeek V4 Pro, GLM 5.2, etc.), invoke
-  `/generate-execute-prompt` for a portable, model-agnostic execution prompt.
+- Ends with a build menu and stops for the user to pick:
+  1. **Same session (default)** — main thread spawns `@architect-build` as a sonnet subagent;
+     it reads the plan from disk. No new session needed. `architect-plan` can't spawn it itself
+     (no `Agent`/`Bash` tool) — the main thread does, after hand-off.
+  2. **Separate session** — open a new Claude Code session and call `@architect-build` (clean context).
+  3. **Another model/tool** (DeepSeek V4 Pro, GLM 5.2, Kimi, etc.) — invoke
+     `/generate-execute-prompt` for a portable, model-agnostic execution prompt.
 
 **Session B — build:**
 
@@ -59,8 +65,10 @@ needs speed (sonnet). Two separate sessions required.
 - Executes task by task. Checkpoints after each phase.
 - If plan is missing or ambiguous → stops and says so. Does not improvise.
 
-**Why two sessions?** `@architect-plan` runs on `opus`. `@architect-build` runs on `sonnet`.
-Claude Code can't hot-swap models, so you need a fresh session for the build half.
+**Why a split, not two sessions?** `@architect-plan` runs on `opus`, `@architect-build` on
+`sonnet`. A subagent honors its own `model:` regardless of the main session's model, so opus can
+spawn the sonnet builder in the same session — the hand-off works because the plan is saved to
+disk, not because sessions are separate. A fresh session is optional (clean context), not required.
 
 ---
 

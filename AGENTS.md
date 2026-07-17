@@ -90,7 +90,7 @@ Agent files live flat in `agents/`, named `architect.<platform>-<role>.md`:
 
 The core design: planning and execution are separated so a planning agent can't slide into building.
 
-- **Claude Code** — two sessions (can't hot-swap models): `@architect-plan` on opus writes the plan, then a fresh `@architect-build` session on sonnet executes it.
+- **Claude Code** — role split, not mandatory two sessions: `@architect-plan` (opus) writes the plan, then hands off with a build menu. Default is same-session — the main thread spawns `@architect-build` as a sonnet subagent (subagents honor their own `model:`; hand-off works via the plan saved to disk). Alternatives: a fresh `@architect-build` session (clean context), or another model via `/generate-execute-prompt`. `architect-plan` never spawns the builder itself (no `Agent`/`Bash` tool).
 - **OpenCode combined** — one agent, prose gate. Halts after writing the plan; resumes build only on `execute` / `continue` / `go` / `build it` / `run it`.
 - **OpenCode split (recommended)** — Tab-switch between two agents. `architect-plan` sets `bash: deny`, so the no-execution gate is machine-enforced, not prose.
 - **Any model/tool** — use the `generate-execute-prompt` skill to produce a portable prompt that can execute the plan in a different model, tool, or fresh session.
