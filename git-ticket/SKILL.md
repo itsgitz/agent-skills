@@ -26,6 +26,10 @@ always shown and confirmed before anything is pushed to the remote.
 "Ticket" is deliberately generic — one flow spans issues, PRs, and MRs, with
 room to add new forges (Bitbucket, self-hosted) later.
 
+Bodies are kept **simple by default** — a few sentences of prose, headings
+only when there's real content to put under them. Ticket length matches the
+change's size.
+
 ## When to Use
 
 - "Create/open a GitHub issue" or "open/raise a PR / pull request"
@@ -116,15 +120,23 @@ Resolution order — stop at the first that yields a title:
 
 ### 5. Generate the body
 
+**Keep it simple. Default = a few sentences of plain prose, no headings.** A
+short ticket that says what and why beats a wall of half-empty sections. Add a
+heading only when there's real content under it — never scaffold empty ones.
+
 Auto-pick the source:
 
-- **Issue** → the user's prose/context.
-  - Bug: `## Context`, `## Expected`, `## Actual`, optional `## Repro`.
-  - Feature: `## Context`, `## Proposal`.
-- **PR/MR** → the branch diff + commit messages, blended with any user prose:
+- **Issue** → the user's prose. Default: 1–3 sentences stating what and why.
+  - Add `## Steps` / `## Expected` vs `## Actual` **only** for a bug with
+    distinct repro/behavior worth separating. Simple bug → one line.
+- **PR/MR** → the branch diff + commits, blended with any user prose:
   - `git log <base>..HEAD --pretty=%s` and `git diff --stat <base>..HEAD`
-  - Sections: `## Summary`, `## Changes`, `## Testing`.
-- Both signals present → blend prose into the relevant sections.
+  - Default: a one-line summary + a short bullet list of the changes.
+  - Add a `## Testing` line only if there's something real to say.
+- Both signals present → blend, still minimal.
+
+Rule of thumb: if a section would hold one line, inline it. If it'd be empty,
+drop it. Match the ticket's length to the change's size.
 
 ### 6. Draft-then-confirm — ALWAYS
 
@@ -160,6 +172,7 @@ confirmed every time, with no exceptions.
 | Silently defaulting to the commit subject when no config | Ask the user for the format first (pre-fill the inferred pattern); only default if they skip |
 | Leaving a raw `{MODULE}` in the title | Fill from context or ask once; never ship a literal placeholder |
 | Creating immediately without a draft | Always show title + body and confirm first |
+| Scaffolding empty `## Context/## Testing` sections | Default to a few sentences; add a heading only when it has real content |
 | Hard-failing when `gh`/`glab` missing | Fall back to markdown for manual creation |
 | Using `gh` for a GitLab remote (or vice versa) | Detect the host from `git remote get-url origin` first |
 | Guessing the PR base branch | Use the repo default (`git symbolic-ref refs/remotes/origin/HEAD`) or ask |
@@ -179,12 +192,13 @@ Skill:
 
 Draft shown:
   Title: [API/RateLimit] Add token-bucket rate limiter to gateway
-  ## Summary
-  ...
-  ## Changes
-  ...
-  ## Testing
-  ...
+
+  Adds a token-bucket limiter to the gateway to cap per-client request rate.
+
+  - `gateway/ratelimit.go` — bucket + refill
+  - `gateway/middleware.go` — wire limiter into request path
+
+  Tested: unit tests for refill + burst; manual 429 check.
 
 User: looks good
 

@@ -3,7 +3,8 @@
 Turn your case/context into a **forge ticket** — a GitHub issue/PR or GitLab
 issue/MR — and create it via the forge CLI (`gh` / `glab`). When the CLI is
 missing, unauthenticated, or the host is unsupported (Bitbucket, self-hosted),
-it falls back to a ready-to-paste title + markdown body. Always drafts and
+it falls back to a ready-to-paste title + markdown body. Bodies are kept
+simple — a few sentences, headings only when needed. Always drafts and
 confirms before creating; never creates silently, never hard-fails.
 
 ## Install
