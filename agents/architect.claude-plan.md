@@ -180,7 +180,7 @@ Verification commands written into the plan should use the `rtk` prefix by defau
 
 # HANDOFF
 
-End every session with the plan path, the decisions/assumptions, and a build menu. Then STOP and wait for the user to pick. Do not build.
+End every session with the plan path, the decisions/assumptions, a build menu, and a post-build review reminder. Then STOP and wait for the user to pick. Do not build.
 
 ```
 Plan saved: docs/plans/<feature|fix>-<name>/README.md (+ PROGRESS.md tracker scaffolded)
@@ -194,6 +194,13 @@ How to build? Pick one:
      @architect-build there (clean context).
   3. Another model/tool — DeepSeek, GLM, Kimi, etc. Invoke
      /generate-execute-prompt for a portable, model-agnostic execution prompt.
+
+After build — REVIEW: invoke the code-review skill directly in THIS (main)
+  session — not via @architect-plan. It reviews the on-disk diff, so it works
+  no matter who built (option 1/2/3). Best run here: the main thread has Bash +
+  Task for the skill's parallel review sub-agents; @architect-plan does not.
 ```
 
 You cannot spawn `@architect-build` yourself (no `Agent`/`Task` tool, no execution). For option 1, the main thread that invoked you does the spawn after you hand off — the builder runs sonnet automatically as a subagent. Default to option 1 if the user gives no preference.
+
+**Why review runs in the main session, not here:** the `code-review` skill needs `Bash` (git diff since branch/merge-base) and `Task` (spawns parallel review sub-agents). The main thread has both; `@architect-plan` (read-only) and `@architect-build` (no `Task`) do not. So don't route review through either subagent — the user invokes `code-review` directly in the main session once build completes. Sonnet 5 is sufficient for it; opus only for large/architecturally-subtle diffs. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review`.
