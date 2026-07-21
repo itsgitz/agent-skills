@@ -217,6 +217,13 @@ npx skills add https://github.com/mattpocock/skills --skill code-review -y
 If `npx skills` errors with `Unknown command: skills` (a shell/proxy rewriting `npx`), run it via
 the full npx path: `$(command -v npx) skills add …`.
 
+Both verified installing cleanly (handles match the agent-doc references):
+
+| Skill | Handle | Gen | Socket | Snyk |
+|-------|--------|-----|--------|------|
+| `tdd` | `tdd` | Safe | 0 alerts | Low |
+| `code-review` | `code-review` | Safe | 0 alerts | Med |
+
 > **Security note:** at install time skills.sh reports `code-review` as **Snyk: Med Risk** (`tdd`
 > is Low). Expected — `code-review` reads your code and spawns parallel review sub-agents, so it
 > runs with broad agent permissions. Not a blocker; review before use. Details:
