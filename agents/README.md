@@ -19,14 +19,16 @@ Agent definitions for AI coding tools. Drop these into your tool's agent/config 
 All agents persist plans as documentation under `docs/plans/`, one directory per plan:
 
 ```
-feature  →  docs/plans/feature-<name>/README.md
-bug fix   →  docs/plans/fix-<name>/README.md
+feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md}
+bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md}
 <name>    =  short kebab-case slug (e.g. user-auth, login-crash)
 ```
 
 - `README.md` is the **canonical** plan doc — GitHub renders it when the dir is opened.
+- `PROGRESS.md` is the **build tracker** — a task checklist (`- [ ]` per plan task) plus a batch log.
 - Supporting files (diagrams, scratch notes) may live beside it in the same dir.
-- The planning half **writes** this README; the build half **reads** from the same path.
+- The planning half **writes** both (`README.md` = plan, `PROGRESS.md` = scaffolded checklist); the
+  build half **reads** the README and ticks off / logs into `PROGRESS.md` as it executes.
 
 ---
 
@@ -203,8 +205,9 @@ skip existing files instead of prompting), `--force` (overwrite existing files),
 ## Notes
 
 - Caveman mode is always on for every agent — terse, no filler, full technical substance.
-- All agents load superpowers skills automatically when context matches (`brainstorming`,
-  `writing-plans`, `systematic-debugging`).
+- Build agents auto-load `systematic-debugging` (superpowers) when context matches. Brainstorming
+  and plan-writing are **inline** in the plan agents (`# BRAINSTORM STRUCTURE` / `# PLAN STRUCTURE`),
+  not external skills — self-contained when installed without superpowers.
 - All agents also auto-load [`ponytail`](https://github.com/DietrichGebert/ponytail) (external
   skill, install separately) for lazy/minimal output — plan agents design lazily (YAGNI),
   build agents build lazily (reuse/stdlib/native/dep before new code). TDD gate still wins on
@@ -213,5 +216,5 @@ skip existing files instead of prompting), `--force` (overwrite existing files),
 - `architect-build` (both platforms) will refuse to start if no plan exists — it won't improvise a design.
 - The split OpenCode `architect-plan` enforces the no-execution gate via `bash: deny` (machine-level),
   not just prose — it physically cannot run shell.
-- TDD is a hard gate for every agent: every code change follows test-first (Red→Green→Refactor) via the `test-driven-development` skill. Pure docs/config tasks are exempt.
+- TDD is a hard gate for every agent: every code change follows test-first (Red→Green→Refactor) via the `Test-Driven Development` skill ([mattpocock/skills](https://github.com/mattpocock/skills) `tdd`). Install separately like ponytail: `npx skills add https://github.com/mattpocock/skills --skill tdd`. Build agents can install it via their find-skills flow; plan agents write the install command into the plan doc. Pure docs/config tasks are exempt.
 - Shell-executing agents proxy commands through `rtk` by default, falling back to the bare CLI when rtk is absent. See **Command proxy** above.

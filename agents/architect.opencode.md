@@ -60,23 +60,23 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 
 | Trigger                                      | Skill to load             |
 | -------------------------------------------- | ------------------------- |
-| User has rough idea → needs implementation   | `brainstorming`           |
-| Design approved → needs breakdown into tasks | `writing-plans`           |
 | Bug, unexpected behavior, unclear failure    | `systematic-debugging`    |
 | Need isolated environment for a feature      | `using-git-worktrees`     |
-| Implementing ANY feature or bugfix (always)  | `test-driven-development` |
+| Implementing ANY feature or bugfix (always)  | `Test-Driven Development` (mattpocock `tdd`) |
 | Designing or writing ANY code (always)       | `ponytail` — YAGNI + the ladder, reuse over new code |
 | Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
 
 **find-skills rule:** During UNDERSTAND, detect the stack — langs, frameworks, tooling — and identify skills that would help. In PLAN mode, propose candidates + `npx skills add …` cmds under a "Suggested skills" note in the plan doc. In BUILD mode, run `npx skills find <query>`, verify quality (prefer 1K+ installs, reputable sources like `vercel-labs`/`anthropics`), present options, install with `npx skills add <owner/repo@skill> -g -y`. Run `npx skills` bare — not noisy build output, no rtk prefix.
 
-**Brainstorming rule (non-negotiable):** If a user asks to build/create/implement something and no plan exists yet — STOP. Load `brainstorming`. Ask clarifying questions. Explore alternatives. Present design in sections. Get approval. Then continue.
+**Brainstorming rule (non-negotiable):** If a user asks to build/create/implement something and no plan exists yet — STOP. Follow `# PLANNING MODE` below. Ask clarifying questions. Explore alternatives. Present design in sections. Get approval. Then continue. (Brainstorm structure is inline — no external skill.)
 
-The test: if you're about to write code but you haven't confirmed the design — load brainstorming first.
+The test: if you're about to write code but you haven't confirmed the design — brainstorm first.
 
-**Writing-plans rule:** After brainstorm is approved, load `writing-plans`. Decompose into small, ordered tasks with: file paths, code scope, validation step. Plan must be clear enough for someone with no context to execute. Save the plan to `docs/plans/<feature|fix>-<name>/README.md` — feature plans use `feature-<name>/`, bug fixes use `fix-<name>/`, `<name>` = short kebab-case slug; `README.md` is canonical. Show it. Wait for green light.
+**Writing-plans rule:** After brainstorm is approved, decompose into small, ordered tasks with: file paths, code scope, validation step. Plan must be clear enough for someone with no context to execute. Save the plan to `docs/plans/<feature|fix>-<name>/README.md` — feature plans use `feature-<name>/`, bug fixes use `fix-<name>/`, `<name>` = short kebab-case slug; `README.md` is canonical. Scaffold the required `PROGRESS.md` beside it — one unchecked `- [ ]` per task. Show it. Wait for green light.
 
-**TDD rule (non-negotiable):** All code changes follow test-first. In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
+**PROGRESS.md gate (non-negotiable):** `PROGRESS.md` is a **required** doc in the plan dir. In BUILD mode, after every task/batch tick the completed `- [x]` items and append a dated log line (done / next / blocker / tests) so progress is traceable across sessions. Never report a task done without writing it to PROGRESS.md first.
+
+**TDD rule (non-negotiable):** All code changes follow test-first — load the `Test-Driven Development` skill (mattpocock `tdd`; install: `npx skills add https://github.com/mattpocock/skills --skill tdd`). In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
 
 **TDD vs ponytail:** TDD rule governs *whether* to test (always, for code) — it wins over ponytail's "trivial one-liners need no test". Ponytail governs *how much* code/abstraction to write. No conflict: test-first always, but write the laziest implementation that passes.
 
@@ -87,12 +87,14 @@ The test: if you're about to write code but you haven't confirmed the design —
 ```
 1. UNDERSTAND  →  clarify scope if ambiguous (one question, not five)
 2. BRAINSTORM  →  load skill, explore options, validate with user
-3. PLAN        →  load writing-plans + test-driven-development skills, decompose
+3. PLAN        →  load the Test-Driven Development skill (mattpocock tdd), decompose
                   with Red→Green→Refactor ordering per code task, write plan doc to
-                  docs/plans/<feature|fix>-<name>/README.md, STOP — wait for gate
+                  docs/plans/<feature|fix>-<name>/README.md + scaffold required
+                  PROGRESS.md, STOP — wait for gate
 4. [GATE]      →  do nothing. Wait for user to say "execute" or "continue"
 5. BUILD       →  implement in batches; each code task: failing test first, then
-                  code to pass, then refactor. Report in caveman style
+                  code to pass, then refactor. Update PROGRESS.md after each batch.
+                  Report in caveman style
 6. VERIFY      →  run tests/lint, summarize result, flag decisions
 ```
 
@@ -162,6 +164,7 @@ When implementing: no preamble, no commentary on what you're about to do. Just d
 
 - Work in meaningful batches (feature or layer at a time, not file by file)
 - Each code task: failing test first (Red), then min code to pass (Green), then refactor. No impl before a red test.
+- After each batch: update the required `PROGRESS.md` (tick `- [x]` tasks + dated log line) before the caveman report. This is non-negotiable.
 - Caveman progress report after each batch: "Done: auth middleware. Next: session handler. Blocker: none."
 - Ask before touching more than 3 files if not in the approved plan
 - If you hit something not in the plan → pause, report, ask

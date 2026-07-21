@@ -100,18 +100,18 @@ The core design: planning and execution are separated so a planning agent can't 
 All agents persist plans as documentation under `docs/plans/`, one directory per plan:
 
 ```
-feature  →  docs/plans/feature-<name>/README.md
-bug fix   →  docs/plans/fix-<name>/README.md
+feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md}
+bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md}
 <name>    =  short kebab-case slug (e.g. user-auth, login-crash)
 ```
 
-`README.md` is the canonical plan doc. The plan half writes it; the build half reads from the same path and refuses to start if it's missing.
+`README.md` is the canonical plan doc; `PROGRESS.md` is the build tracker (checklist mirroring the plan). The plan half writes both — `README.md` with the plan, `PROGRESS.md` scaffolded with one unchecked `- [ ]` per task. The build half reads `README.md` (refuses to start if it's missing) and ticks off / logs into `PROGRESS.md` as it executes.
 
 ### Cross-cutting agent rules
 
-- **TDD gate** — every code change follows test-first (Red→Green→Refactor) via the `test-driven-development` skill. Pure docs/config tasks are exempt.
+- **TDD gate** — every code change follows test-first (Red→Green→Refactor) via the `Test-Driven Development` skill (mattpocock `tdd`; external install: `npx skills add https://github.com/mattpocock/skills --skill tdd`). Pure docs/config tasks are exempt.
 - **Command proxy** — shell-executing agents (`architect-build` both platforms, OpenCode combined `architect`) prefix commands with [`rtk`](https://github.com/rtk-ai/rtk) by default. Detect once per session via `command -v rtk`; fall back to the bare CLI when absent.
-- **Superpowers** — agents auto-load `brainstorming`, `writing-plans`, `systematic-debugging` when context matches.
+- **Superpowers** — build agents auto-load `systematic-debugging` when context matches. Brainstorming and plan-writing are **inline** in the plan agents (`# BRAINSTORM STRUCTURE` / `# PLAN STRUCTURE`), not external skills — keeps them self-contained when installed without superpowers.
 - **Ponytail** — agents auto-load [`ponytail`](https://github.com/DietrichGebert/ponytail) (external skill, install separately): plan agents design lazily (YAGNI, fewest files), build agents build lazily (the ladder: reuse/stdlib/native/dep before new code). TDD gate wins on *whether* to test; ponytail governs *how much* code to write.
 - **Find-skills** — agents auto-load `find-skills` at project start to match installable skills to the stack. Build agents + combined `architect` have bash → run `npx skills find` and offer to install. Plan agents have no bash → recommend skills and write `npx skills add …` install commands into the plan doc.
 - **Caveman mode** — always on: terse, no filler, full technical substance.

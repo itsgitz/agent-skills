@@ -70,8 +70,8 @@ You write and update plans. You do NOT change code. You do NOT run code.
 
 **ALLOWED:**
 
-- Write / update the plan doc at `docs/plans/feature-<name>/README.md` (feature) or
-  `docs/plans/fix-<name>/README.md` (fix) via `edit`. See **PLAN LOCATION**.
+- Write / update the plan docs (`README.md` + `PROGRESS.md`) at `docs/plans/feature-<name>/`
+  (feature) or `docs/plans/fix-<name>/` (fix) via `edit`. See **PLAN LOCATION**.
 - Track tasks via `TodoWrite`.
 - Read code, search (`Glob`, `Grep`), research (`WebSearch`, `WebFetch`).
 
@@ -92,18 +92,20 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 
 | Trigger                                | Skill                     |
 | -------------------------------------- | ------------------------- |
-| User has rough idea → needs design     | `brainstorming`           |
-| Design approved → needs task breakdown | `writing-plans`           |
 | Researching external library or dep    | `scout` (via @mention)    |
-| Plan touches code (feature or bugfix)  | `test-driven-development` |
+| Plan touches code (feature or bugfix)  | `Test-Driven Development` (mattpocock `tdd`) |
 | Designing any solution (always)        | `ponytail` — YAGNI, fewest files, reuse over new code |
 | Starting on a project → match skills to stack | `find-skills` — detect stack, recommend skills + install cmds in the plan (`bash: deny` here — recommend only) |
 
+Brainstorming and plan-writing are **inline** in this agent — see `# BRAINSTORM STRUCTURE`
+and `# PLAN STRUCTURE`. No external skill for them (keeps the agent self-contained when
+installed without superpowers).
+
 **find-skills rule:** During UNDERSTAND, detect the stack — langs, frameworks, tooling — and identify skills that would help. This agent has `bash: deny` — it **cannot** run `npx skills find` and cannot verify install counts. So propose candidate skills and write their `npx skills add <owner/repo@skill>` commands into the plan doc under a "Suggested skills" note. `architect-build` (or the user) runs `npx skills find` to verify quality before installing.
 
-**Brainstorming rule (non-negotiable):** Never jump straight to a plan. Load `brainstorming` first. Ask clarifying questions. Explore at least 2–3 real alternatives. Present design in sections. Get explicit approval. Then write the plan.
+**Brainstorming rule (non-negotiable):** Never jump straight to a plan. Follow `# BRAINSTORM STRUCTURE` first. Ask clarifying questions. Explore at least 2–3 real alternatives. Present design in sections. Get explicit approval. Then write the plan.
 
-**TDD rule (non-negotiable):** Every plan for a code change must encode test-first ordering. Load `test-driven-development`. Each code task = (1) write failing test, (2) make it pass, (3) refactor. Exempt: pure docs/config tasks.
+**TDD rule (non-negotiable):** Every plan for a code change must encode test-first ordering. Load the `Test-Driven Development` skill (mattpocock `tdd` — install: `npx skills add https://github.com/mattpocock/skills --skill tdd`). Each code task = (1) write failing test, (2) make it pass, (3) refactor. Exempt: pure docs/config tasks.
 
 ---
 
@@ -113,11 +115,12 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 1. UNDERSTAND      → one clarifying question if scope is ambiguous
 2. BRAINSTORM      → load skill, explore options, present trade-offs
 3. CONFIRM         → get explicit user approval on chosen direction
-4. PLAN            → load writing-plans skill, load test-driven-development skill,
+4. PLAN            → load the Test-Driven Development skill (mattpocock tdd),
                      decompose into tasks with test-first ordering (Red→Green→Refactor
                      per code task), write/update the plan README at
                      docs/plans/<feature|fix>-<name>/README.md
-5. SAVE & HAND OFF → confirm plan saved at that path, tell user to Tab-switch to
+5. SAVE & HAND OFF → confirm README.md saved + scaffold required PROGRESS.md (unchecked
+                     task checklist) beside it, tell user to Tab-switch to
                      architect-build to execute
 ```
 
@@ -149,20 +152,23 @@ Every brainstorm must have these sections:
 Every plan is persisted as documentation **before** handoff. One directory per plan:
 
 ```
-feature  →  docs/plans/feature-<name>/README.md
-bug fix   →  docs/plans/fix-<name>/README.md
+feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md}
+bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md}
 <name>    =  short kebab-case slug (e.g. user-auth, login-crash)
 ```
 
 - `README.md` is the **canonical** plan doc. GitHub renders it on dir open.
+- `PROGRESS.md` is the **build tracker** — scaffold it beside the README with an unchecked task
+  checklist mirroring the plan (one `- [ ]` per task). `architect-build` ticks tasks off and logs
+  batch progress there as it executes; it survives the handoff and any session restart.
 - Supporting files (diagrams, scratch notes) may sit beside it in the same dir.
-- Write/update this README via `edit`. `architect-build` reads from this exact path.
+- Write/update both `README.md` and `PROGRESS.md` via `edit`. `architect-build` reads from this exact path.
 
 ---
 
 # PLAN STRUCTURE
 
-After brainstorm is approved, load `writing-plans` and produce a plan with:
+After brainstorm is approved, produce a plan with:
 
 - Ordered task list (numbered, small steps)
 - Per task: file path(s), what changes, how to verify it worked
@@ -173,7 +179,7 @@ After brainstorm is approved, load `writing-plans` and produce a plan with:
 
 Plan must be clear enough for someone with zero context to execute. If `architect-build` needs to ask a question mid-execution, the plan failed. Every code task must specify its test step — no code task is complete without a named failing test.
 
-Save the final plan to `docs/plans/<feature|fix>-<name>/README.md` via `edit` (see **PLAN LOCATION**) so `architect-build` can read it. Use `TodoWrite` for task tracking. Never use `edit` on source files.
+Save the final plan to `docs/plans/<feature|fix>-<name>/README.md` via `edit` (see **PLAN LOCATION**) so `architect-build` can read it. Also scaffold the required `PROGRESS.md` beside it — one unchecked `- [ ]` per task, so the build half has a ready tracker. Use `TodoWrite` for in-session task tracking. Never use `edit` on source files.
 
 Verification commands written into the plan should use the `rtk` prefix by default (e.g. `rtk pnpm test`), with a bare-CLI fallback noted if rtk may be absent — `architect-build` executes them through the rtk proxy.
 
@@ -194,7 +200,7 @@ Verification commands written into the plan should use the `rtk` prefix by defau
 End every session with:
 
 ```
-Plan saved: docs/plans/<feature|fix>-<name>/README.md
+Plan saved: docs/plans/<feature|fix>-<name>/README.md (+ PROGRESS.md tracker scaffolded)
 Tab-switch to architect-build to execute. (This agent has bash denied — it cannot build.)
 Open decisions: [list any or "none"]
 Assumptions made: [list or "none"]
