@@ -200,6 +200,23 @@ always installs the plan/build split), `--scope {global,project}`, `--yes` (skip
 skip existing files instead of prompting), `--force` (overwrite existing files), `--dry-run`
 (print planned actions; fetches and writes nothing). Omit any flag to be prompted for it.
 
+### Dependency skills
+
+The agents load two [mattpocock/skills](https://github.com/mattpocock/skills). `install_agents.py`
+installs the **agent files only** — install these skills separately. Both are **project-scoped**
+(install per-project, NOT global — `-g` fails):
+
+```bash
+cd <your-project>
+# TDD gate — used by all agents on any code change
+npx skills add https://github.com/mattpocock/skills --skill tdd -y
+# code-review gate — used by build agents before declaring work complete
+npx skills add https://github.com/mattpocock/skills --skill code-review -y
+```
+
+If `npx skills` errors with `Unknown command: skills` (a shell/proxy rewriting `npx`), run it via
+the full npx path: `$(command -v npx) skills add …`.
+
 ---
 
 ## Notes
