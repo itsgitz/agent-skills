@@ -204,6 +204,13 @@ Plan saved: docs/plans/<feature|fix>-<name>/README.md (+ PROGRESS.md tracker sca
 Tab-switch to architect-build to execute. (This agent has bash denied — it cannot build.)
 Open decisions: [list any or "none"]
 Assumptions made: [list or "none"]
+
+After build — REVIEW: run the code-review skill in architect-build (it has bash
+  + task, so it fully runs the skill's parallel review sub-agents). Reviews the
+  on-disk diff → executor-agnostic (works even if build ran in another model/tool).
+  This agent (architect-plan) can't review: bash is denied.
 ```
 
 To execute with a different model or tool (DeepSeek V4 Pro, GLM 5.2, etc.) instead of `architect-build`, invoke `/generate-execute-prompt` for a portable, model-agnostic execution prompt.
+
+**Why review runs in architect-build, not here:** the `code-review` skill needs `bash` (git diff since branch/merge-base) and `task` (parallel review sub-agents). `architect-build` has both; this agent has `bash: deny`. So don't review here — Tab-switch to `architect-build`, which already gates on code-review before declaring work complete. Sonnet-class models are sufficient for it; reach for a stronger model only on large/architecturally-subtle diffs. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review`.
