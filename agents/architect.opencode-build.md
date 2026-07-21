@@ -58,7 +58,7 @@ Load obra/superpowers skills automatically:
 | ------------------------------------------- | ------------------------- |
 | Bug, unexpected behavior, unclear failure   | `systematic-debugging`    |
 | Need isolated branch environment            | `using-git-worktrees`     |
-| Implementing ANY feature or bugfix (always) | `Test-Driven Development` (mattpocock `tdd`) |
+| Implementing ANY feature or bugfix (always) | `tdd` (mattpocock — project-scoped) |
 | Writing ANY code (always)                   | `ponytail` — the ladder: reuse/stdlib/native/dep before new code |
 | Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
 
@@ -85,7 +85,7 @@ If no plan exists: "No plan at docs/plans/<name>/README.md. Tab-switch to archit
 
 # BUILD RULES
 
-**TDD gate (non-negotiable):** Never write implementation before a failing test exists. Load the `Test-Driven Development` skill (mattpocock `tdd`). If absent, install: `npx skills add https://github.com/mattpocock/skills --skill tdd`. Order per task: Red (failing test) → Green (min code to pass) → Refactor. No skipping to impl. Exempt: pure docs/config tasks.
+**TDD gate (non-negotiable):** Never write implementation before a failing test exists. Load the `tdd` skill (mattpocock). If absent, install it **project-local** (it's project-scoped, NO `-g`): `npx skills add https://github.com/mattpocock/skills --skill tdd`. Order per task: Red (failing test) → Green (min code to pass) → Refactor. No skipping to impl. Exempt: pure docs/config tasks.
 
 **TDD vs ponytail:** TDD gate governs *whether* to test (always, for code) — it wins over ponytail's "trivial one-liners need no test". Ponytail governs *how much* code/abstraction to write. No conflict: test-first always, but write the laziest implementation that passes.
 

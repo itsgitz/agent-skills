@@ -62,7 +62,7 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 | -------------------------------------------- | ------------------------- |
 | Bug, unexpected behavior, unclear failure    | `systematic-debugging`    |
 | Need isolated environment for a feature      | `using-git-worktrees`     |
-| Implementing ANY feature or bugfix (always)  | `Test-Driven Development` (mattpocock `tdd`) |
+| Implementing ANY feature or bugfix (always)  | `tdd` (mattpocock — project-scoped) |
 | Designing or writing ANY code (always)       | `ponytail` — YAGNI + the ladder, reuse over new code |
 | Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
 
@@ -76,7 +76,7 @@ The test: if you're about to write code but you haven't confirmed the design —
 
 **PROGRESS.md gate (non-negotiable):** `PROGRESS.md` is a **required** doc in the plan dir. In BUILD mode, after every task/batch tick the completed `- [x]` items and append a dated log line (done / next / blocker / tests) so progress is traceable across sessions. Never report a task done without writing it to PROGRESS.md first.
 
-**TDD rule (non-negotiable):** All code changes follow test-first — load the `Test-Driven Development` skill (mattpocock `tdd`; install: `npx skills add https://github.com/mattpocock/skills --skill tdd`). In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
+**TDD rule (non-negotiable):** All code changes follow test-first — load the `tdd` skill (mattpocock). It's **project-scoped** — install per-project, NO `-g`: `npx skills add https://github.com/mattpocock/skills --skill tdd`. In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
 
 **TDD vs ponytail:** TDD rule governs *whether* to test (always, for code) — it wins over ponytail's "trivial one-liners need no test". Ponytail governs *how much* code/abstraction to write. No conflict: test-first always, but write the laziest implementation that passes.
 
@@ -87,7 +87,7 @@ The test: if you're about to write code but you haven't confirmed the design —
 ```
 1. UNDERSTAND  →  clarify scope if ambiguous (one question, not five)
 2. BRAINSTORM  →  load skill, explore options, validate with user
-3. PLAN        →  load the Test-Driven Development skill (mattpocock tdd), decompose
+3. PLAN        →  load the tdd skill (mattpocock), decompose
                   with Red→Green→Refactor ordering per code task, write plan doc to
                   docs/plans/<feature|fix>-<name>/README.md + scaffold required
                   PROGRESS.md, STOP — wait for gate

@@ -93,7 +93,7 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 | Trigger                                | Skill                     |
 | -------------------------------------- | ------------------------- |
 | Researching external library or dep    | `scout` (via @mention)    |
-| Plan touches code (feature or bugfix)  | `Test-Driven Development` (mattpocock `tdd`) |
+| Plan touches code (feature or bugfix)  | `tdd` (mattpocock — project-scoped) |
 | Designing any solution (always)        | `ponytail` — YAGNI, fewest files, reuse over new code |
 | Starting on a project → match skills to stack | `find-skills` — detect stack, recommend skills + install cmds in the plan (`bash: deny` here — recommend only) |
 
@@ -105,7 +105,7 @@ installed without superpowers).
 
 **Brainstorming rule (non-negotiable):** Never jump straight to a plan. Follow `# BRAINSTORM STRUCTURE` first. Ask clarifying questions. Explore at least 2–3 real alternatives. Present design in sections. Get explicit approval. Then write the plan.
 
-**TDD rule (non-negotiable):** Every plan for a code change must encode test-first ordering. Load the `Test-Driven Development` skill (mattpocock `tdd` — install: `npx skills add https://github.com/mattpocock/skills --skill tdd`). Each code task = (1) write failing test, (2) make it pass, (3) refactor. Exempt: pure docs/config tasks.
+**TDD rule (non-negotiable):** Every plan for a code change must encode test-first ordering. Load the `tdd` skill (mattpocock). It's **project-scoped** — install per-project, NO `-g`: `npx skills add https://github.com/mattpocock/skills --skill tdd`. Each code task = (1) write failing test, (2) make it pass, (3) refactor. Exempt: pure docs/config tasks.
 
 ---
 
@@ -115,7 +115,7 @@ installed without superpowers).
 1. UNDERSTAND      → one clarifying question if scope is ambiguous
 2. BRAINSTORM      → load skill, explore options, present trade-offs
 3. CONFIRM         → get explicit user approval on chosen direction
-4. PLAN            → load the Test-Driven Development skill (mattpocock tdd),
+4. PLAN            → load the tdd skill (mattpocock),
                      decompose into tasks with test-first ordering (Red→Green→Refactor
                      per code task), write/update the plan README at
                      docs/plans/<feature|fix>-<name>/README.md
