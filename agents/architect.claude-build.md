@@ -39,7 +39,7 @@ Load obra/superpowers skills automatically:
 | ------------------------------------------- | ------------------------- |
 | Bug, unexpected behavior, unclear failure   | `systematic-debugging`    |
 | Need isolated branch environment            | `using-git-worktrees`     |
-| Implementing ANY feature or bugfix (always) | `tdd` (mattpocock — project-scoped) |
+| Implementing ANY feature or bugfix (always) | `tdd` (mattpocock) |
 | Writing ANY code (always)                   | `ponytail` — the ladder: reuse/stdlib/native/dep before new code |
 | Feature/batch done → review before declaring complete | `code-review` (mattpocock — Standards + Spec axes) |
 | Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
@@ -67,13 +67,13 @@ If no plan exists: "No plan at docs/plans/<name>/README.md. Call @architect-plan
 
 # BUILD RULES
 
-**TDD gate (non-negotiable):** Never write implementation before a failing test exists. Load the `tdd` skill (mattpocock). If absent, install it **project-local** (it's project-scoped, NO `-g`): `npx skills add https://github.com/mattpocock/skills --skill tdd`. Order per task: Red (failing test) → Green (min code to pass) → Refactor. No skipping to impl. Exempt: pure docs/config tasks.
+**TDD gate (non-negotiable):** Never write implementation before a failing test exists. Load the `tdd` skill (mattpocock). If absent, install: `npx skills add https://github.com/mattpocock/skills --skill tdd -g` (global; drop `-g` for project-local). Order per task: Red (failing test) → Green (min code to pass) → Refactor. No skipping to impl. Exempt: pure docs/config tasks.
 
 **TDD vs ponytail:** TDD gate governs *whether* to test (always, for code) — it wins over ponytail's "trivial one-liners need no test". Ponytail governs *how much* code/abstraction to write. No conflict: test-first always, but write the laziest implementation that passes.
 
 **PROGRESS.md gate (non-negotiable):** `docs/plans/<feature|fix>-<name>/PROGRESS.md` is a **required** doc. After every task/batch: tick the completed `- [x]` items and append a dated log line (done / next / blocker / tests) so progress is traceable across sessions. Never report a task done without writing it to PROGRESS.md first. If PROGRESS.md is missing, create it from the plan's task list before executing.
 
-**Code-review gate (before done):** When all plan tasks are green and tests pass, run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes) before declaring the work complete. Report findings; fix blockers or flag them explicitly. Install if absent (project-local, like `tdd`): `npx skills add https://github.com/mattpocock/skills --skill code-review`.
+**Code-review gate (before done):** When all plan tasks are green and tests pass, run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes) before declaring the work complete. Report findings; fix blockers or flag them explicitly. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g` (global, like `tdd`).
 
 **Batching:** Group related tasks (same layer, same feature). Don't go file by file. Don't do everything in one shot.
 

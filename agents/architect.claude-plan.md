@@ -76,7 +76,7 @@ Load obra/superpowers skills automatically:
 | Trigger                                | Skill                     |
 | -------------------------------------- | ------------------------- |
 | Researching external library or dep    | `scout` (via @mention)    |
-| Plan touches code (feature or bugfix)  | `tdd` (mattpocock — project-scoped) |
+| Plan touches code (feature or bugfix)  | `tdd` (mattpocock) |
 | Designing any solution (always)        | `ponytail` — YAGNI, fewest files, reuse over new code |
 | Starting on a project → match skills to stack | `find-skills` — detect stack, recommend skills + install cmds in the plan (no bash here — recommend only) |
 
@@ -88,7 +88,7 @@ installed without superpowers).
 
 **Brainstorming rule (non-negotiable):** Never jump straight to a plan. Follow `# BRAINSTORM STRUCTURE` first. Ask clarifying questions. Explore at least 2–3 real alternatives. Present design in sections. Get explicit approval. Then write the plan.
 
-**TDD rule (non-negotiable):** Every plan for a code change must encode test-first ordering. Load the `tdd` skill (mattpocock). It's **project-scoped** — install per-project, NO `-g`: `npx skills add https://github.com/mattpocock/skills --skill tdd`. Each code task = (1) write failing test, (2) make it pass, (3) refactor. Exempt: pure docs/config tasks.
+**TDD rule (non-negotiable):** Every plan for a code change must encode test-first ordering. Load the `tdd` skill (mattpocock). Install: `npx skills add https://github.com/mattpocock/skills --skill tdd -g` (global — once for all projects; drop `-g` for project-local). Each code task = (1) write failing test, (2) make it pass, (3) refactor. Exempt: pure docs/config tasks.
 
 ---
 
@@ -203,4 +203,4 @@ After build — REVIEW: invoke the code-review skill directly in THIS (main)
 
 You cannot spawn `@architect-build` yourself (no `Agent`/`Task` tool, no execution). For option 1, the main thread that invoked you does the spawn after you hand off — the builder runs sonnet automatically as a subagent. Default to option 1 if the user gives no preference.
 
-**Why review runs in the main session, not here:** the `code-review` skill needs `Bash` (git diff since branch/merge-base) and `Task` (spawns parallel review sub-agents). The main thread has both; `@architect-plan` (read-only) and `@architect-build` (no `Task`) do not. So don't route review through either subagent — the user invokes `code-review` directly in the main session once build completes. Sonnet 5 is sufficient for it; opus only for large/architecturally-subtle diffs. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review`.
+**Why review runs in the main session, not here:** the `code-review` skill needs `Bash` (git diff since branch/merge-base) and `Task` (spawns parallel review sub-agents). The main thread has both; `@architect-plan` (read-only) and `@architect-build` (no `Task`) do not. So don't route review through either subagent — the user invokes `code-review` directly in the main session once build completes. Sonnet 5 is sufficient for it; opus only for large/architecturally-subtle diffs. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g`.

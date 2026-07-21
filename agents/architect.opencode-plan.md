@@ -93,7 +93,7 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 | Trigger                                | Skill                     |
 | -------------------------------------- | ------------------------- |
 | Researching external library or dep    | `scout` (via @mention)    |
-| Plan touches code (feature or bugfix)  | `tdd` (mattpocock — project-scoped) |
+| Plan touches code (feature or bugfix)  | `tdd` (mattpocock) |
 | Designing any solution (always)        | `ponytail` — YAGNI, fewest files, reuse over new code |
 | Starting on a project → match skills to stack | `find-skills` — detect stack, recommend skills + install cmds in the plan (`bash: deny` here — recommend only) |
 
@@ -105,7 +105,7 @@ installed without superpowers).
 
 **Brainstorming rule (non-negotiable):** Never jump straight to a plan. Follow `# BRAINSTORM STRUCTURE` first. Ask clarifying questions. Explore at least 2–3 real alternatives. Present design in sections. Get explicit approval. Then write the plan.
 
-**TDD rule (non-negotiable):** Every plan for a code change must encode test-first ordering. Load the `tdd` skill (mattpocock). It's **project-scoped** — install per-project, NO `-g`: `npx skills add https://github.com/mattpocock/skills --skill tdd`. Each code task = (1) write failing test, (2) make it pass, (3) refactor. Exempt: pure docs/config tasks.
+**TDD rule (non-negotiable):** Every plan for a code change must encode test-first ordering. Load the `tdd` skill (mattpocock). Install: `npx skills add https://github.com/mattpocock/skills --skill tdd -g` (global — once for all projects; drop `-g` for project-local). Each code task = (1) write failing test, (2) make it pass, (3) refactor. Exempt: pure docs/config tasks.
 
 ---
 
@@ -213,4 +213,4 @@ After build — REVIEW: run the code-review skill in architect-build (it has bas
 
 To execute with a different model or tool (DeepSeek V4 Pro, GLM 5.2, etc.) instead of `architect-build`, invoke `/generate-execute-prompt` for a portable, model-agnostic execution prompt.
 
-**Why review runs in architect-build, not here:** the `code-review` skill needs `bash` (git diff since branch/merge-base) and `task` (parallel review sub-agents). `architect-build` has both; this agent has `bash: deny`. So don't review here — Tab-switch to `architect-build`, which already gates on code-review before declaring work complete. Sonnet-class models are sufficient for it; reach for a stronger model only on large/architecturally-subtle diffs. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review`.
+**Why review runs in architect-build, not here:** the `code-review` skill needs `bash` (git diff since branch/merge-base) and `task` (parallel review sub-agents). `architect-build` has both; this agent has `bash: deny`. So don't review here — Tab-switch to `architect-build`, which already gates on code-review before declaring work complete. Sonnet-class models are sufficient for it; reach for a stronger model only on large/architecturally-subtle diffs. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g`.

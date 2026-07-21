@@ -62,7 +62,7 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 | -------------------------------------------- | ------------------------- |
 | Bug, unexpected behavior, unclear failure    | `systematic-debugging`    |
 | Need isolated environment for a feature      | `using-git-worktrees`     |
-| Implementing ANY feature or bugfix (always)  | `tdd` (mattpocock — project-scoped) |
+| Implementing ANY feature or bugfix (always)  | `tdd` (mattpocock) |
 | Designing or writing ANY code (always)       | `ponytail` — YAGNI + the ladder, reuse over new code |
 | Build done → review before declaring complete | `code-review` (mattpocock — Standards + Spec axes) |
 | Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
@@ -77,7 +77,7 @@ The test: if you're about to write code but you haven't confirmed the design —
 
 **PROGRESS.md gate (non-negotiable):** `PROGRESS.md` is a **required** doc in the plan dir. In BUILD mode, after every task/batch tick the completed `- [x]` items and append a dated log line (done / next / blocker / tests) so progress is traceable across sessions. Never report a task done without writing it to PROGRESS.md first.
 
-**TDD rule (non-negotiable):** All code changes follow test-first — load the `tdd` skill (mattpocock). It's **project-scoped** — install per-project, NO `-g`: `npx skills add https://github.com/mattpocock/skills --skill tdd`. In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
+**TDD rule (non-negotiable):** All code changes follow test-first — load the `tdd` skill (mattpocock). Install: `npx skills add https://github.com/mattpocock/skills --skill tdd -g` (global — once for all projects; drop `-g` for project-local). In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
 
 **TDD vs ponytail:** TDD rule governs *whether* to test (always, for code) — it wins over ponytail's "trivial one-liners need no test". Ponytail governs *how much* code/abstraction to write. No conflict: test-first always, but write the laziest implementation that passes.
 
@@ -169,7 +169,7 @@ When implementing: no preamble, no commentary on what you're about to do. Just d
 - Caveman progress report after each batch: "Done: auth middleware. Next: session handler. Blocker: none."
 - Ask before touching more than 3 files if not in the approved plan
 - If you hit something not in the plan → pause, report, ask
-- Before declaring the work complete (all tasks green, tests pass): run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes), report findings, address blockers. Install if absent (project-local, like `tdd`): `npx skills add https://github.com/mattpocock/skills --skill code-review`.
+- Before declaring the work complete (all tasks green, tests pass): run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes), report findings, address blockers. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g` (global, like `tdd`).
 
 ---
 

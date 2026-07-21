@@ -203,16 +203,24 @@ skip existing files instead of prompting), `--force` (overwrite existing files),
 ### Dependency skills
 
 The agents load two [mattpocock/skills](https://github.com/mattpocock/skills). `install_agents.py`
-installs the **agent files only** — install these skills separately. Both are **project-scoped**
-(install per-project, NOT global — `-g` fails):
+installs the **agent files only** — install these skills separately. Install **globally** (`-g`,
+once for all projects — recommended for the agents) or per-project (drop `-g`):
 
 ```bash
-cd <your-project>
-# TDD gate — used by all agents on any code change
-npx skills add https://github.com/mattpocock/skills --skill tdd -y
-# code-review gate — used by build agents before declaring work complete
-npx skills add https://github.com/mattpocock/skills --skill code-review -y
+# global — installs once, available in every project
+npx skills add https://github.com/mattpocock/skills --skill tdd -g -y
+npx skills add https://github.com/mattpocock/skills --skill code-review -g -y
+
+# or per-project (run inside the repo, no -g)
+# cd <your-project>
+# npx skills add https://github.com/mattpocock/skills --skill tdd -y
+# npx skills add https://github.com/mattpocock/skills --skill code-review -y
 ```
+
+With `-g`, the CLI prints a harmless `PromptScript does not support global skill installation`
+line — ignore it. The **universal** skill format still installs globally (to `~/.agents/skills/`,
+symlinked into `~/.claude/skills/` and OpenCode), which is what the agents load. Only the unused
+PromptScript variant skips the global step.
 
 If `npx skills` errors with `Unknown command: skills` (a shell/proxy rewriting `npx`), run it via
 the full npx path: `$(command -v npx) skills add …`.
@@ -246,5 +254,5 @@ Both verified installing cleanly (handles match the agent-doc references):
 - Build agents run the `code-review` skill ([mattpocock/skills](https://github.com/mattpocock/skills) — Standards + Spec axes) before declaring work complete: `npx skills add https://github.com/mattpocock/skills --skill code-review`. Plan agents don't review (nothing built yet).
 - The split OpenCode `architect-plan` enforces the no-execution gate via `bash: deny` (machine-level),
   not just prose — it physically cannot run shell.
-- TDD is a hard gate for every agent: every code change follows test-first (Red→Green→Refactor) via the `tdd` skill ([mattpocock/skills](https://github.com/mattpocock/skills)). It's **project-scoped** — install it **per-project, NOT global** (`-g` fails with "PromptScript does not support global skill installation"): `npx skills add https://github.com/mattpocock/skills --skill tdd`. Build agents can install it via their find-skills flow; plan agents write the install command into the plan doc. Pure docs/config tasks are exempt.
+- TDD is a hard gate for every agent: every code change follows test-first (Red→Green→Refactor) via the `tdd` skill ([mattpocock/skills](https://github.com/mattpocock/skills)). Install **globally** (`-g`, once for all projects) or per-project: `npx skills add https://github.com/mattpocock/skills --skill tdd -g` (see **Dependency skills** for the harmless PromptScript note). Build agents can install it via their find-skills flow; plan agents write the install command into the plan doc. Pure docs/config tasks are exempt.
 - Shell-executing agents proxy commands through `rtk` by default, falling back to the bare CLI when rtk is absent. See **Command proxy** above.
