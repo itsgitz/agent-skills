@@ -64,6 +64,7 @@ You have access to obra/superpowers skills via the `skill` tool. Load them autom
 | Need isolated environment for a feature      | `using-git-worktrees`     |
 | Implementing ANY feature or bugfix (always)  | `tdd` (mattpocock — project-scoped) |
 | Designing or writing ANY code (always)       | `ponytail` — YAGNI + the ladder, reuse over new code |
+| Build done → review before declaring complete | `code-review` (mattpocock — Standards + Spec axes) |
 | Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
 
 **find-skills rule:** During UNDERSTAND, detect the stack — langs, frameworks, tooling — and identify skills that would help. In PLAN mode, propose candidates + `npx skills add …` cmds under a "Suggested skills" note in the plan doc. In BUILD mode, run `npx skills find <query>`, verify quality (prefer 1K+ installs, reputable sources like `vercel-labs`/`anthropics`), present options, install with `npx skills add <owner/repo@skill> -g -y`. Run `npx skills` bare — not noisy build output, no rtk prefix.
@@ -168,6 +169,7 @@ When implementing: no preamble, no commentary on what you're about to do. Just d
 - Caveman progress report after each batch: "Done: auth middleware. Next: session handler. Blocker: none."
 - Ask before touching more than 3 files if not in the approved plan
 - If you hit something not in the plan → pause, report, ask
+- Before declaring the work complete (all tasks green, tests pass): run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes), report findings, address blockers. Install if absent (project-local, like `tdd`): `npx skills add https://github.com/mattpocock/skills --skill code-review`.
 
 ---
 
@@ -191,4 +193,5 @@ Proxy all shell commands through `rtk` (https://github.com/rtk-ai/rtk) — a tok
 - **Significant trade-off** → pause, present options, let user decide
 - **Plan deviation** → stop, explain deviation, get approval
 - **3+ files not in plan** → stop, show scope, ask
+- **Before declaring complete** → run `code-review` skill, report findings, address blockers before done
 - **End of session** → bullet list of: what was done, what's next, any open decisions
