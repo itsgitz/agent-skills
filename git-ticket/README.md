@@ -7,6 +7,13 @@ it falls back to a ready-to-paste title + markdown body. Bodies are kept
 simple — a few sentences, headings only when needed. Always drafts and
 confirms before creating; never creates silently, never hard-fails.
 
+Also handles two GitHub Projects v2 board actions, GitHub-only for now:
+closing a ticket, and moving a project card between `Status` columns
+(`Backlog` → `Ready` → `In Progress` → …), scoped by default to the single
+open project linked to the current repo. Both run through the bundled
+`git-ticket/scripts/gh_project.py` — see [SKILL.md](./SKILL.md#project-board-actions-github-only)
+for the full flow.
+
 ## Install
 
 ```bash
@@ -33,6 +40,9 @@ Claude invokes this skill when you ask about:
 - "open a GitLab MR" / "raise a merge request" / "file a gitlab issue"
 - a house title convention like `[API/{MODULE}] summary`
 - getting a title + markdown body to paste in manually
+- "close this ticket" / "close issue #42" (GitHub Projects v2)
+- "move this to In Progress" / "advance this card to Ready" / "move #42
+  to Done" (GitHub Projects v2)
 
 ## Title Format
 

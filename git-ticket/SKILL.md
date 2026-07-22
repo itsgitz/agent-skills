@@ -8,7 +8,10 @@ description: >
   when they mention a house title convention like `[API/{MODULE}] summary`,
   or when a forge CLI is missing/unauthed and they need a title + markdown
   body to paste in manually. Covers GitHub (gh) and GitLab (glab); unknown
-  hosts (Bitbucket, self-hosted) fall back to markdown.
+  hosts (Bitbucket, self-hosted) fall back to markdown. Also use for GitHub
+  Projects v2 board actions — "close this ticket", "close issue #N", "move
+  this to In Progress", "advance this card to Ready", "move #N to Done" —
+  scoped to the project linked to the current repo. GitHub only for now.
 license: MIT
 ---
 
@@ -156,6 +159,45 @@ confirmed every time, with no exceptions.
    For a PR/MR on a pushed branch, also give the remote's "new PR/MR" URL if
    known (e.g. `https://bitbucket.org/<ws>/<repo>/pull-requests/new?source=<branch>`).
 
+## Project Board Actions (GitHub only)
+
+Two actions beyond create: closing a ticket, and moving a project card
+between `Status` columns (`Backlog` → `Ready` → `In Progress` → …). GitHub
+Projects v2 only today — GitLab boards etc. are a future extension point,
+same as the forge table in step 1.
+
+Both run through the bundled script, never hand-rolled `gh api graphql`:
+
+```
+git-ticket/scripts/gh_project.py resolve  [--repo owner/name] [--project N]
+git-ticket/scripts/gh_project.py status-options [--repo owner/name] [--project N]
+git-ticket/scripts/gh_project.py move --issue N --to "In Progress" [--repo owner/name] [--project N]
+git-ticket/scripts/gh_project.py close --issue N [--repo owner/name] [--type issue|pr] [--also-move-to "Done"]
+```
+
+**"Current active project"** = the single open GitHub Project linked to the
+current repo, resolved by `resolve` via the repo's `projectsV2` connection
+(not just any project the owner has). Zero or more-than-one open project →
+the script exits non-zero listing candidates; ask the user which one and
+re-run with `--project N`.
+
+**Flow:**
+
+1. Run `resolve` (and `status-options` for a move) to show the user what
+   you're about to act on: the resolved project, and — for a move — the
+   valid target column names.
+2. Draft-then-confirm still applies: state the action plainly ("close
+   issue #42" / "move #42 from Ready to In Progress in project #6") and
+   get explicit confirmation before running `move` or `close` — these
+   mutate real state, same bar as creating a ticket.
+3. On confirm, run the subcommand. `close` only closes the issue/PR by
+   default; pass `--also-move-to` to also park the card in a target
+   column in the same call (it does not auto-move — project automations
+   may already handle that, and guessing a "done" column is unreliable).
+4. Any failure (no linked project, ambiguous project, unknown status name,
+   issue not tracked in that project) prints one clear line to stderr and
+   exits non-zero — never a stack trace, never a silent no-op.
+
 ## Fallback Rules
 
 - Never hard-fail. Missing CLI, no auth, unknown host → markdown, not error.
@@ -174,6 +216,9 @@ confirmed every time, with no exceptions.
 | Creating immediately without a draft | Always show title + body and confirm first |
 | Scaffolding empty `## Context/## Testing` sections | Default to a few sentences; add a heading only when it has real content |
 | Hard-failing when `gh`/`glab` missing | Fall back to markdown for manual creation |
+| Hand-rolling `gh api graphql` for board actions | Use `git-ticket/scripts/gh_project.py` — one script, already handles project/field/item resolution |
+| Guessing which project is active with >1 linked project | Run `resolve` first; ambiguous → ask the user, then pass `--project N` |
+| Closing/moving without confirming first | Same draft-then-confirm bar as creating a ticket — state the action, get an OK, then run it |
 | Using `gh` for a GitLab remote (or vice versa) | Detect the host from `git remote get-url origin` first |
 | Guessing the PR base branch | Use the repo default (`git symbolic-ref refs/remotes/origin/HEAD`) or ask |
 
