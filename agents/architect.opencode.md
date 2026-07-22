@@ -169,7 +169,7 @@ When implementing: no preamble, no commentary on what you're about to do. Just d
 - Caveman progress report after each batch: "Done: auth middleware. Next: session handler. Blocker: none."
 - Ask before touching more than 3 files if not in the approved plan
 - If you hit something not in the plan → pause, report, ask
-- Before declaring the work complete (all tasks green, tests pass): run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes), report findings, address blockers. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g` (global, like `tdd`).
+- Before declaring the work complete (all tasks green, tests pass): run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes). **Pass the plan as the spec: `docs/plans/<feature|fix>-<name>/README.md`** (the skill's step-2 path argument) so the Spec axis reviews against the plan, not a branch-name guess — without it the Spec axis silently reports "no spec available" and skips. Report findings, address blockers. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g` (global, like `tdd`).
 
 ---
 
@@ -193,5 +193,5 @@ Proxy all shell commands through `rtk` (https://github.com/rtk-ai/rtk) — a tok
 - **Significant trade-off** → pause, present options, let user decide
 - **Plan deviation** → stop, explain deviation, get approval
 - **3+ files not in plan** → stop, show scope, ask
-- **Before declaring complete** → run `code-review` skill, report findings, address blockers before done
+- **Before declaring complete** → run `code-review` skill (pass plan `docs/plans/<name>/README.md` as spec), report findings, address blockers before done
 - **End of session** → bullet list of: what was done, what's next, any open decisions

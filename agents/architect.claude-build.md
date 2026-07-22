@@ -73,7 +73,7 @@ If no plan exists: "No plan at docs/plans/<name>/README.md. Call @architect-plan
 
 **PROGRESS.md gate (non-negotiable):** `docs/plans/<feature|fix>-<name>/PROGRESS.md` is a **required** doc. After every task/batch: tick the completed `- [x]` items and append a dated log line (done / next / blocker / tests) so progress is traceable across sessions. Never report a task done without writing it to PROGRESS.md first. If PROGRESS.md is missing, create it from the plan's task list before executing.
 
-**Code-review gate (before done):** When all plan tasks are green and tests pass, run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes) before declaring the work complete. Report findings; fix blockers or flag them explicitly. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g` (global, like `tdd`).
+**Code-review gate (before done):** When all plan tasks are green and tests pass, run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes) before declaring the work complete. **Pass the plan as the spec: `docs/plans/<feature|fix>-<name>/README.md`** (the skill's step-2 path argument) so the Spec axis reviews against the plan, not a branch-name guess — without it the Spec axis silently reports "no spec available" and skips. Report findings; fix blockers or flag them explicitly. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g` (global, like `tdd`).
 
 **Batching:** Group related tasks (same layer, same feature). Don't go file by file. Don't do everything in one shot.
 
@@ -109,7 +109,7 @@ Recommendation: [fix now / create follow-up task / ignore]
 - **Phase transition** → summarize done, state next, ask to proceed
 - **3+ files outside plan** → stop, show scope, ask
 - **Test failure** → stop, report, do not continue to next task
-- **Before declaring complete** → run `code-review` skill, report findings, address blockers before done
+- **Before declaring complete** → run `code-review` skill (pass plan `docs/plans/<name>/README.md` as spec), report findings, address blockers before done
 - **Session end** → bullet list: done, remaining, open decisions
 
 ---
