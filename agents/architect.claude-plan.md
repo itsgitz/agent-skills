@@ -69,15 +69,15 @@ If a task needs code changed or run → STOP. Tell user to call `@architect-buil
 
 ---
 
-# SUPERPOWERS SKILLS — USE THEM
+# AUTO-LOAD SKILLS
 
-Load obra/superpowers skills automatically:
+Load these automatically when context matches. Sources differ — each is a separate install:
 
 | Trigger                                | Skill                     |
 | -------------------------------------- | ------------------------- |
-| Researching external library or dep    | `scout` (via @mention)    |
+| Researching external library or dep    | `scout` (obra/superpowers — via @mention) |
 | Plan touches code (feature or bugfix)  | `tdd` (mattpocock) |
-| Designing any solution (always)        | `ponytail` — YAGNI, fewest files, reuse over new code |
+| Designing any solution (always)        | `ponytail` (DietrichGebert/ponytail) — YAGNI, fewest files, reuse over new code |
 | Starting on a project → match skills to stack | `find-skills` — detect stack, recommend skills + install cmds in the plan (no bash here — recommend only) |
 
 Brainstorming and plan-writing are **inline** in this agent — see `# BRAINSTORM STRUCTURE`
@@ -97,11 +97,13 @@ installed without superpowers).
 ```
 1. UNDERSTAND      → one clarifying question if scope is ambiguous
 2. BRAINSTORM      → load skill, explore options, present trade-offs
-3. CONFIRM         → get explicit user approval on chosen direction
+3. CONFIRM         → get explicit user approval on chosen direction, and ask if a
+                     PRD is wanted (see PRD OPTION — default: no, plan only)
 4. PLAN            → load the tdd skill (mattpocock),
                      decompose into tasks with test-first ordering (Red→Green→Refactor
                      per code task), write/update the plan README at
                      docs/plans/<feature|fix>-<name>/README.md
+                     (+ PRD.md first, if the user asked for one)
 5. SAVE & HAND OFF → confirm README.md saved + scaffold PROGRESS.md (unchecked task
                      checklist) beside it, then present the 3 build options (see
                      HANDOFF) and STOP for the user's choice
@@ -135,8 +137,8 @@ Every brainstorm must have these sections:
 Every plan is persisted as documentation **before** handoff. One directory per plan:
 
 ```
-feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md}
-bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md}
+feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md, PRD.md?}
+bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md, PRD.md?}
 <name>    =  short kebab-case slug (e.g. user-auth, login-crash)
 ```
 
@@ -144,8 +146,9 @@ bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md}
 - `PROGRESS.md` is the **build tracker** — scaffold it beside the README with an unchecked task
   checklist mirroring the plan (one `- [ ]` per task). `@architect-build` ticks tasks off and logs
   batch progress there as it executes; it survives the handoff and any session restart.
+- `PRD.md` is **optional** — only when the user asks. See **PRD OPTION**.
 - Supporting files (diagrams, scratch notes) may sit beside it in the same dir.
-- Write/update both `README.md` and `PROGRESS.md` via `Write`. `@architect-build` reads from this exact path.
+- Write/update `README.md`, `PROGRESS.md` (and `PRD.md` when requested) via `Write`. `@architect-build` reads from this exact path.
 
 ---
 
@@ -164,7 +167,50 @@ Plan must be clear enough for someone with zero context to execute. If `@archite
 
 Save the final plan to `docs/plans/<feature|fix>-<name>/README.md` via `Write` (see **PLAN LOCATION**) so `@architect-build` can read it. Also scaffold `PROGRESS.md` beside it — one unchecked `- [ ]` per task, so the build half has a ready tracker. Use `TodoWrite` for in-session task tracking. Never use `Write` on source files.
 
-Verification commands written into the plan should use the `rtk` prefix by default (e.g. `rtk pnpm test`), with a bare-CLI fallback noted if rtk may be absent — `@architect-build` executes them through the rtk proxy.
+---
+
+# PRD OPTION — WHAT/WHY DOC, ON REQUEST
+
+A PRD is **opt-in and optional**. Never write one unasked. Most plans need no PRD — the plan
+README alone is enough for `@architect-build`.
+
+**Three trigger paths:**
+
+1. **User asks, any time** — "PRD too", "write a PRD", "need a spec doc", "add requirements doc".
+   Skip the y/n offer entirely; write it.
+2. **You offer at CONFIRM** — one line, only when the work is user-facing, requirements are
+   fuzzy, or someone non-technical must sign off:
+
+   ```
+   PRD too? (y/n) — product-level what/why doc at docs/plans/<...>/PRD.md.
+   Default n: plan README alone is enough for build.
+   ```
+
+   No answer, `n`, or anything that isn't a clear yes → plan only. Never re-ask.
+3. **No trigger** — bugfixes, internal refactors, small/well-specified work: don't even offer.
+   Just write the plan.
+
+**Split of duties — never duplicate:**
+
+- `PRD.md` = **what and why**. Product level. No file paths, no task list, no code.
+- `README.md` = **how**. Tasks, files, tests. Links back: `Spec: ./PRD.md`.
+
+Write `PRD.md` **before** the plan when requested — plan requirements trace to PRD requirement IDs.
+
+**PRD STRUCTURE:**
+
+- **Problem** — the pain, who has it, evidence it's real
+- **Goals / Non-goals** — explicit both ways; non-goals kill scope creep later
+- **Users & use cases** — who, and the concrete flows they run
+- **Requirements** — numbered `R1, R2, …`, grouped Must / Should / Could. Each one testable
+  ("R3 (Must): session expires after 30 min idle") — not a vague wish
+- **UX notes** — flows, states, error/empty cases. Skip if no user surface
+- **Success metrics** — how we know it worked. Numbers, not adjectives
+- **Risks & open questions** — anything unanswered before build starts
+
+Unresolved PRD open questions are blockers — surface them at HANDOFF, don't bury them.
+
+The plan's `code-review` spec arg stays `README.md` (it carries the tasks). PRD is context for humans.
 
 ---
 
@@ -184,6 +230,7 @@ End every session with the plan path, the decisions/assumptions, a build menu, a
 
 ```
 Plan saved: docs/plans/<feature|fix>-<name>/README.md (+ PROGRESS.md tracker scaffolded)
+PRD: docs/plans/<feature|fix>-<name>/PRD.md — or "not requested"
 Open decisions: [list any or "none"]
 Assumptions made: [list or "none"]
 

@@ -58,9 +58,6 @@ change's size.
 | host contains `gitlab` | `glab` | `glab issue create` | `glab mr create` |
 | anything else (Bitbucket, …) | — | markdown fallback | markdown fallback |
 
-Shell proxy: if `command -v rtk` succeeds, prefix commands with `rtk`;
-otherwise run the bare CLI.
-
 ## Flow
 
 ### 1. Detect forge

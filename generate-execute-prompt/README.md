@@ -51,8 +51,8 @@ A single fenced code block containing:
 3. Model-agnostic execution rules: TDD ordering (Red → Green → Refactor),
    task-by-task batching, a `Done/Next/Blocker/Tests` progress format,
    stop-on-deviation, and out-of-scope flagging
-4. A note to drop any `rtk`-style command proxy prefix if the target
-   environment doesn't have it
+4. A note to substitute equivalents for any verification tool the target
+   environment lacks
 
 No Claude-specific tool names, `@agent` mentions, or vendor/model names
 appear in the output — it's readable and executable by any model with

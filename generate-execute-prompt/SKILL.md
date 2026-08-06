@@ -125,9 +125,8 @@ Execution rules:
 - If you notice something broken outside the plan's scope, flag it; do not
   fix it unless asked.
 - Run the verification commands listed in the plan using whatever shell
-  access your environment provides. If a command is prefixed with a proxy
-  tool (e.g. `rtk`) that isn't available in your environment, drop the
-  prefix and run the bare command instead.
+  access your environment provides. If a command uses a tool your
+  environment lacks, substitute the equivalent one and say which.
 - For long-running commands (test suites, coverage, builds), run them in a
   single foreground call and give them enough time to finish. Do not
   background a process (`&`) and then poll it with repeated `sleep`/`ps` —

@@ -100,18 +100,19 @@ The core design: planning and execution are separated so a planning agent can't 
 All agents persist plans as documentation under `docs/plans/`, one directory per plan:
 
 ```
-feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md}
-bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md}
+feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md, PRD.md?}
+bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md, PRD.md?}
 <name>    =  short kebab-case slug (e.g. user-auth, login-crash)
 ```
 
 `README.md` is the canonical plan doc; `PROGRESS.md` is the build tracker (checklist mirroring the plan). The plan half writes both — `README.md` with the plan, `PROGRESS.md` scaffolded with one unchecked `- [ ]` per task. The build half reads `README.md` (refuses to start if it's missing) and ticks off / logs into `PROGRESS.md` as it executes.
 
+`PRD.md` is **optional and opt-in** — three triggers: (1) user asks at any point ("with a PRD", "PRD too") → written directly; (2) agent offers `PRD too? (y/n)` (default `n`) after brainstorm, only for user-facing or fuzzy-requirement work, never re-asked; (3) no offer at all for bugfixes/refactors/small specified work. PRD = what/why (problem, goals/non-goals, users, numbered testable `R1…` requirements Must/Should/Could, UX notes, success metrics, risks); plan README = how (tasks, files, tests) and links back with `Spec: ./PRD.md`. Written before the plan. Build agents read it as context; `README.md` stays the executable spec and the `code-review` spec arg.
+
 ### Cross-cutting agent rules
 
 - **TDD gate** — every code change follows test-first (Red→Green→Refactor) via the `tdd` skill (mattpocock). Install globally (once, all projects) or per-project: `npx skills add https://github.com/mattpocock/skills --skill tdd -g`. Pure docs/config tasks are exempt.
 - **Code-review gate** — build agents (`architect-build` both platforms, combined `architect`) run the `code-review` skill (mattpocock — Standards + Spec axes) before declaring work complete, passing the plan `docs/plans/<feature|fix>-<name>/README.md` as the spec (skill's step-2 path arg) so the Spec axis reviews against the plan, not a branch-name guess: `npx skills add https://github.com/mattpocock/skills --skill code-review -g`. Plan agents don't review (no code exists yet).
-- **Command proxy** — shell-executing agents (`architect-build` both platforms, OpenCode combined `architect`) prefix commands with [`rtk`](https://github.com/rtk-ai/rtk) by default. Detect once per session via `command -v rtk`; fall back to the bare CLI when absent.
 - **Superpowers** — build agents auto-load `systematic-debugging` when context matches. Brainstorming and plan-writing are **inline** in the plan agents (`# BRAINSTORM STRUCTURE` / `# PLAN STRUCTURE`), not external skills — keeps them self-contained when installed without superpowers.
 - **Ponytail** — agents auto-load [`ponytail`](https://github.com/DietrichGebert/ponytail) (external skill, install separately): plan agents design lazily (YAGNI, fewest files), build agents build lazily (the ladder: reuse/stdlib/native/dep before new code). TDD gate wins on *whether* to test; ponytail governs *how much* code to write.
 - **Find-skills** — agents auto-load `find-skills` at project start to match installable skills to the stack. Build agents + combined `architect` have bash → run `npx skills find` and offer to install. Plan agents have no bash → recommend skills and write `npx skills add …` install commands into the plan doc.

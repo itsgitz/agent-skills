@@ -19,16 +19,40 @@ Agent definitions for AI coding tools. Drop these into your tool's agent/config 
 All agents persist plans as documentation under `docs/plans/`, one directory per plan:
 
 ```
-feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md}
-bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md}
+feature  →  docs/plans/feature-<name>/{README.md, PROGRESS.md, PRD.md?}
+bug fix   →  docs/plans/fix-<name>/{README.md, PROGRESS.md, PRD.md?}
 <name>    =  short kebab-case slug (e.g. user-auth, login-crash)
 ```
 
 - `README.md` is the **canonical** plan doc — GitHub renders it when the dir is opened.
 - `PROGRESS.md` is the **build tracker** — a task checklist (`- [ ]` per plan task) plus a batch log.
+- `PRD.md` is **optional** — the product-level what/why doc, written only when asked. See **PRD option**.
 - Supporting files (diagrams, scratch notes) may live beside it in the same dir.
 - The planning half **writes** both (`README.md` = plan, `PROGRESS.md` = scaffolded checklist); the
   build half **reads** the README and ticks off / logs into `PROGRESS.md` as it executes.
+
+---
+
+## PRD option
+
+Plan agents (`architect-plan` both platforms, and the combined OpenCode `architect`) can also
+write a PRD — **opt-in, never automatic**. Most plans don't need one; the plan README alone is
+enough to build from. Three trigger paths:
+
+1. **Ask for it, any time** — "plan this with a PRD", "PRD too", "need a spec doc". No y/n
+   round-trip, the agent just writes it.
+2. **The agent offers** — after brainstorm it asks `PRD too? (y/n)`, default `n`, and only when
+   the work is user-facing, requirements are fuzzy, or a non-technical stakeholder must sign off.
+   Anything short of a clear yes → plan only, and it won't re-ask.
+3. **It doesn't offer at all** — bugfixes, internal refactors, small well-specified work.
+
+- `PRD.md` = **what and why** — problem, goals/non-goals, users & use cases, numbered testable
+  requirements (`R1…` grouped Must/Should/Could), UX notes, success metrics, risks + open questions.
+  No file paths, no task list, no code.
+- `README.md` = **how** — tasks, files, tests. It links back (`Spec: ./PRD.md`) and its tasks
+  trace to PRD requirement IDs.
+- Written **before** the plan when requested. Build agents read `PRD.md` for context if it
+  exists, but `README.md` stays the executable spec and the `code-review` spec argument.
 
 ---
 
@@ -133,20 +157,6 @@ architect-build (primary) →  read plan → confirm scope → execute → verif
 after planning. Splitting removes the build instructions from the planning agent entirely and
 denies it shell, so the gate holds. The combined `architect` agent remains for users who
 prefer a single conversation.
-
----
-
-## Command proxy
-
-Executing agents (`architect-build` both platforms, and OpenCode's combined `architect`) proxy
-all shell commands through [`rtk`](https://github.com/rtk-ai/rtk) — a token-optimized CLI proxy
-— by default.
-
-- Default: prefix commands with `rtk` (`rtk git status`, `rtk pnpm test`).
-- Detect once per session via `command -v rtk`. Absent → fall back to the bare CLI, no prefix.
-- Plan-only agents (`architect-plan` both platforms) hold no shell — they just note that
-  verification commands *written into* the plan should use the `rtk` prefix (with fallback),
-  since `architect-build` is the one that runs them.
 
 ---
 
@@ -255,4 +265,3 @@ Both verified installing cleanly (handles match the agent-doc references):
 - The split OpenCode `architect-plan` enforces the no-execution gate via `bash: deny` (machine-level),
   not just prose — it physically cannot run shell.
 - TDD is a hard gate for every agent: every code change follows test-first (Red→Green→Refactor) via the `tdd` skill ([mattpocock/skills](https://github.com/mattpocock/skills)). Install **globally** (`-g`, once for all projects) or per-project: `npx skills add https://github.com/mattpocock/skills --skill tdd -g` (see **Dependency skills** for the harmless PromptScript note). Build agents can install it via their find-skills flow; plan agents write the install command into the plan doc. Pure docs/config tasks are exempt.
-- Shell-executing agents proxy commands through `rtk` by default, falling back to the bare CLI when rtk is absent. See **Command proxy** above.
