@@ -17,6 +17,15 @@ AGENT_FILES = {
     ("opencode", "split"): ["architect.opencode-plan.md", "architect.opencode-build.md"],
 }
 
+# Skills the agents auto-load. None is required — a missing one only degrades the agent,
+# which says so on its first response. One entry per source repo; keep in sync with the
+# "Dependency skills" table in agents/README.md.
+SKILL_SOURCES = [
+    ("https://github.com/mattpocock/skills", ["tdd", "code-review", "grilling"]),
+    ("https://github.com/DietrichGebert/ponytail", ["ponytail"]),
+    ("https://github.com/obra/superpowers", ["systematic-debugging", "using-git-worktrees"]),
+]
+
 
 def target_dir(platform, scope):
     home_dir = ".claude" if platform == "claude" else ".opencode"
@@ -148,6 +157,17 @@ def install_one(filename, dest_dir, args):
     print(f"installed {dest}")
 
 
+def print_skill_hint(scope):
+    """List the skills the agents auto-load. Informational — installs nothing."""
+    flag = " -g" if scope == "global" else ""
+    print()
+    print("The agents auto-load these skills. None is required — a missing one only")
+    print("degrades the agent, which tells you so on its first response:")
+    for repo, skills in SKILL_SOURCES:
+        print(f"  npx skills add {repo} --skill {' '.join(skills)}{flag} -y")
+    print("See agents/README.md § Dependency skills for what each one buys you.")
+
+
 def main(argv=None):
     args = parse_args(argv)
 
@@ -180,6 +200,7 @@ def main(argv=None):
         return 130
 
     print(f"done — {len(files)} file(s) in {dest_dir}")
+    print_skill_hint(scope)
     return 0
 
 

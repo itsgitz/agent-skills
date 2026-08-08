@@ -212,20 +212,38 @@ skip existing files instead of prompting), `--force` (overwrite existing files),
 
 ### Dependency skills
 
-The agents load two [mattpocock/skills](https://github.com/mattpocock/skills). `install_agents.py`
-installs the **agent files only** — install these skills separately. Install **globally** (`-g`,
-once for all projects — recommended for the agents) or per-project (drop `-g`):
+`install_agents.py` installs the **agent files only**. The skills below are separate installs from
+three different repos. **None is required to start** — nothing is ever force-installed. Every agent
+runs a *skill preflight* on its first response: it lists what's missing, what that costs you, and
+the install commands, then continues degraded. Build agents additionally offer `(y/n)` to install.
+
+| Skill | Source | Used by | Without it |
+|-------|--------|---------|------------|
+| `tdd` | mattpocock | all | Test-first ordering still enforced by the agent prose, minus the skill's guidance |
+| `code-review` | mattpocock | build, combined | Work is reported **unreviewed** — the Standards + Spec gate is skipped |
+| `grilling` | mattpocock | plan, combined | Brainstorm falls back to inline `# BRAINSTORM STRUCTURE` questions |
+| `ponytail` | [DietrichGebert](https://github.com/DietrichGebert/ponytail) | all | No YAGNI/laziness pressure — expect more code than needed |
+| `systematic-debugging` | [obra/superpowers](https://github.com/obra/superpowers) | build, combined | Ad-hoc debugging instead of a structured loop |
+| `using-git-worktrees` | obra/superpowers | build, combined | No isolated-branch workflow |
+| `find-skills` | [skills.sh](https://skills.sh/) | all | No stack-matched skill suggestions |
+
+Install **globally** (`-g`, once for all projects — recommended for the agents) or per-project
+(drop `-g`). One command per source repo, batching that repo's skills:
 
 ```bash
 # global — installs once, available in every project
-npx skills add https://github.com/mattpocock/skills --skill tdd -g -y
-npx skills add https://github.com/mattpocock/skills --skill code-review -g -y
+npx skills add https://github.com/mattpocock/skills --skill tdd code-review grilling -g -y
+npx skills add https://github.com/DietrichGebert/ponytail --skill ponytail -g -y
+npx skills add https://github.com/obra/superpowers --skill systematic-debugging using-git-worktrees -g -y
 
 # or per-project (run inside the repo, no -g)
 # cd <your-project>
-# npx skills add https://github.com/mattpocock/skills --skill tdd -y
-# npx skills add https://github.com/mattpocock/skills --skill code-review -y
+# npx skills add https://github.com/mattpocock/skills --skill tdd code-review grilling -y
 ```
+
+`grilling` is the model-invocable engine — that's what the plan agents load. `grill-me` and
+`grill-with-docs` in the same repo are `disable-model-invocation` wrappers; install those only if
+you want to trigger a session yourself with `/grill-me`.
 
 With `-g`, the CLI prints a harmless `PromptScript does not support global skill installation`
 line — ignore it. The **universal** skill format still installs globally (to `~/.agents/skills/`,
@@ -235,12 +253,18 @@ PromptScript variant skips the global step.
 If `npx skills` errors with `Unknown command: skills` (a shell/proxy rewriting `npx`), run it via
 the full npx path: `$(command -v npx) skills add …`.
 
-Both verified installing cleanly (handles match the agent-doc references):
+Only the mattpocock commands have been run end-to-end here. The ponytail and superpowers repos use
+the same `skills/<name>/SKILL.md` layout, so the command form holds, but they are untested — if one
+errors, install those two as Claude Code plugins instead (`/plugin marketplace add <owner>/<repo>`).
+
+`tdd` and `code-review` verified installing cleanly (handles match the agent-doc references);
+`grilling` not yet scanned here — `—` means unverified, not clean:
 
 | Skill | Handle | Gen | Socket | Snyk |
 |-------|--------|-----|--------|------|
 | `tdd` | `tdd` | Safe | 0 alerts | Low |
 | `code-review` | `code-review` | Safe | 0 alerts | Med |
+| `grilling` | `grilling` | — | — | — |
 
 > **Security note:** at install time skills.sh reports `code-review` as **Snyk: Med Risk** (`tdd`
 > is Low). Expected — `code-review` reads your code and spawns parallel review sub-agents, so it
@@ -256,11 +280,20 @@ Both verified installing cleanly (handles match the agent-doc references):
   the only two skills the agents take from [obra/superpowers](https://github.com/obra/superpowers).
   Brainstorming and plan-writing are **inline** in the plan agents (`# BRAINSTORM STRUCTURE` /
   `# PLAN STRUCTURE`), not external skills — self-contained when installed without superpowers.
-- **Missing skill → inform, don't block.** No agent installs unasked and none halts over a missing
-  skill. Plan agents (no bash) print the `npx skills add …` command, write it into the plan doc's
-  "Suggested skills" note, and continue on the inline fallback. Build + combined agents (have bash)
-  ask `(y/n)` first; declined → continue and say what degrades. A declined `code-review` install
-  means the work is reported **unreviewed**, not silently skipped.
+- Plan agents (+ combined `architect` in PLAN mode) auto-load [`grilling`](https://github.com/mattpocock/skills)
+  at BRAINSTORM for features, user-facing work, or fuzzy requirements — a design-tree interview run
+  in rounds (numbered questions with a recommended answer each) until the frontier is empty. Skipped
+  for bugfixes and small well-specified asks, same bar as the PRD offer; saying "grill me" forces it
+  on regardless. It drives the *questioning* only — the inline `# BRAINSTORM STRUCTURE` write-up
+  (Context / Options / Trade-offs / Recommendation) is unchanged, and is the fallback when the skill
+  isn't installed. Build agents don't load it.
+- **Skill preflight → inform once, never block.** On its first response each agent checks the
+  auto-load table against what's actually available. All present → silent. Any missing → one block
+  naming each missing skill, what it buys, and one install command per source repo — then it moves
+  on and never nags again. No agent installs unasked; plan agents (no bash) can't install at all and
+  write the commands into the plan doc instead, build + combined agents ask `(y/n)`. Declined →
+  continue and say what degrades; a declined `code-review` means the work is reported **unreviewed**,
+  not silently skipped. `scripts/install_agents.py` prints the same commands after install.
 - OpenCode ships `scout` (external docs / dependency research) and `explore` (codebase search) as
   **built-in subagents** — invoked via the `task` tool, allowed in every architect frontmatter, no
   install. They are not skills and not from superpowers. Claude Code has no equivalent for
