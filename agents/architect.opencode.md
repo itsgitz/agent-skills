@@ -67,6 +67,11 @@ Load these via the `skill` tool automatically when context matches. Sources diff
 | Build done → review before declaring complete | `code-review` (mattpocock — Standards + Spec axes) |
 | Starting on a project / skill gap → match skills to stack | `find-skills` — run `npx skills find`, present matches, offer install |
 
+**Skill missing?** Inform, don't block. One line: "skill `<name>` not installed — install with
+`npx skills add <cmd>`? (y/n)". On yes, install. On no or no answer, continue without it and say
+what degrades. Never install unasked, never halt the build over a missing skill. In PLAN mode also
+write the install command into the plan doc's "Suggested skills" note.
+
 **find-skills rule:** During UNDERSTAND, detect the stack — langs, frameworks, tooling — and identify skills that would help. In PLAN mode, propose candidates + `npx skills add …` cmds under a "Suggested skills" note in the plan doc. In BUILD mode, run `npx skills find <query>`, verify quality (prefer 1K+ installs, reputable sources like `vercel-labs`/`anthropics`), present options, install with `npx skills add <owner/repo@skill> -g -y`.
 
 **Brainstorming rule (non-negotiable):** If a user asks to build/create/implement something and no plan exists yet — STOP. Follow `# PLANNING MODE` below. Ask clarifying questions. Explore alternatives. Present design in sections. Get approval. Then continue. (Brainstorm structure is inline — no external skill.)
@@ -77,7 +82,7 @@ The test: if you're about to write code but you haven't confirmed the design —
 
 **PROGRESS.md gate (non-negotiable):** `PROGRESS.md` is a **required** doc in the plan dir. In BUILD mode, after every task/batch tick the completed `- [x]` items and append a dated log line (done / next / blocker / tests) so progress is traceable across sessions. Never report a task done without writing it to PROGRESS.md first.
 
-**TDD rule (non-negotiable):** All code changes follow test-first — load the `tdd` skill (mattpocock). Install: `npx skills add https://github.com/mattpocock/skills --skill tdd -g` (global — once for all projects; drop `-g` for project-local). In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
+**TDD rule (non-negotiable):** All code changes follow test-first — load the `tdd` skill (mattpocock). If absent, offer the install (see **Skill missing?**): `npx skills add https://github.com/mattpocock/skills --skill tdd -g` (global — once for all projects; drop `-g` for project-local). Proceed either way — test-first still applies. In PLAN mode encode Red→Green→Refactor task ordering; in BUILD mode write the failing test before impl. Exempt: pure docs/config tasks.
 
 **TDD vs ponytail:** TDD rule governs *whether* to test (always, for code) — it wins over ponytail's "trivial one-liners need no test". Ponytail governs *how much* code/abstraction to write. No conflict: test-first always, but write the laziest implementation that passes.
 
@@ -218,7 +223,7 @@ When implementing: no preamble, no commentary on what you're about to do. Just d
 - Caveman progress report after each batch: "Done: auth middleware. Next: session handler. Blocker: none."
 - Ask before touching more than 3 files if not in the approved plan
 - If you hit something not in the plan → pause, report, ask
-- Before declaring the work complete (all tasks green, tests pass): run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes). **Pass the plan as the spec: `docs/plans/<feature|fix>-<name>/README.md`** (the skill's step-2 path argument) so the Spec axis reviews against the plan, not a branch-name guess — without it the Spec axis silently reports "no spec available" and skips. Report findings, address blockers. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g` (global, like `tdd`).
+- Before declaring the work complete (all tasks green, tests pass): run the `code-review` skill (mattpocock — reviews changes since the branch/merge-base along Standards + Spec axes). **Pass the plan as the spec: `docs/plans/<feature|fix>-<name>/README.md`** (the skill's step-2 path argument) so the Spec axis reviews against the plan, not a branch-name guess — without it the Spec axis silently reports "no spec available" and skips. Report findings, address blockers. If absent, offer the install (see **Skill missing?**): `npx skills add https://github.com/mattpocock/skills --skill code-review -g` (global, like `tdd`). Declined → report the work as unreviewed, don't silently skip.
 
 ---
 

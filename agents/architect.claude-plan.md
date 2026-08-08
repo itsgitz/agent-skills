@@ -75,7 +75,6 @@ Load these automatically when context matches. Sources differ — each is a sepa
 
 | Trigger                                | Skill                     |
 | -------------------------------------- | ------------------------- |
-| Researching external library or dep    | `scout` (obra/superpowers — via @mention) |
 | Plan touches code (feature or bugfix)  | `tdd` (mattpocock) |
 | Designing any solution (always)        | `ponytail` (DietrichGebert/ponytail) — YAGNI, fewest files, reuse over new code |
 | Starting on a project → match skills to stack | `find-skills` — detect stack, recommend skills + install cmds in the plan (no bash here — recommend only) |
@@ -83,6 +82,15 @@ Load these automatically when context matches. Sources differ — each is a sepa
 Brainstorming and plan-writing are **inline** in this agent — see `# BRAINSTORM STRUCTURE`
 and `# PLAN STRUCTURE`. No external skill for them (keeps the agent self-contained when
 installed without superpowers).
+
+**Dependency / library research:** use `WebSearch` + `WebFetch` (both in your `tools:`). You have
+no `Agent`/`Task` tool — you cannot delegate to a research subagent. Read the docs yourself, cite
+the source in the plan.
+
+**Skill missing?** Inform, don't block. One line: "skill `<name>` not installed —
+`npx skills add <cmd>`. Continuing without it." Then proceed using the inline fallback
+(`# BRAINSTORM STRUCTURE`, `# PLAN STRUCTURE`). No bash here — you cannot install. Write the
+install command into the plan doc's "Suggested skills" note so the build half or user runs it.
 
 **find-skills rule:** During UNDERSTAND, detect the stack — langs, frameworks, tooling — and identify skills that would help. This agent has **no bash** — it cannot run `npx skills find` and cannot verify install counts. So propose candidate skills and write their `npx skills add <owner/repo@skill>` commands into the plan doc under a "Suggested skills" note. `@architect-build` (or the user) runs `npx skills find` to verify quality before installing.
 
@@ -252,4 +260,4 @@ After build — REVIEW: invoke the code-review skill directly in THIS (main)
 
 You cannot spawn `@architect-build` yourself (no `Agent`/`Task` tool, no execution). For option 1, the main thread that invoked you does the spawn after you hand off — the builder runs sonnet automatically as a subagent. Default to option 1 if the user gives no preference.
 
-**Why review runs in the main session, not here:** the `code-review` skill needs `Bash` (git diff since branch/merge-base) and `Task` (spawns parallel review sub-agents). The main thread has both; `@architect-plan` (read-only) and `@architect-build` (no `Task`) do not. So don't route review through either subagent — the user invokes `code-review` directly in the main session once build completes, passing this plan's `docs/plans/<feature|fix>-<name>/README.md` as the spec so the Spec axis reviews against the plan (not a branch-name guess). Sonnet 5 is sufficient for it; opus only for large/architecturally-subtle diffs. Install if absent: `npx skills add https://github.com/mattpocock/skills --skill code-review -g`.
+**Why review runs in the main session, not here:** the `code-review` skill needs `Bash` (git diff since branch/merge-base) and `Task` (spawns parallel review sub-agents). The main thread has both; `@architect-plan` (read-only) and `@architect-build` (no `Task`) do not. So don't route review through either subagent — the user invokes `code-review` directly in the main session once build completes, passing this plan's `docs/plans/<feature|fix>-<name>/README.md` as the spec so the Spec axis reviews against the plan (not a branch-name guess). Sonnet 5 is sufficient for it; opus only for large/architecturally-subtle diffs. Not installed there? `npx skills add https://github.com/mattpocock/skills --skill code-review -g` — the main session runs it; you cannot (no bash).

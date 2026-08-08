@@ -252,9 +252,19 @@ Both verified installing cleanly (handles match the agent-doc references):
 ## Notes
 
 - Caveman mode is always on for every agent — terse, no filler, full technical substance.
-- Build agents auto-load `systematic-debugging` (superpowers) when context matches. Brainstorming
-  and plan-writing are **inline** in the plan agents (`# BRAINSTORM STRUCTURE` / `# PLAN STRUCTURE`),
-  not external skills — self-contained when installed without superpowers.
+- Build agents auto-load `systematic-debugging` and `using-git-worktrees` when context matches —
+  the only two skills the agents take from [obra/superpowers](https://github.com/obra/superpowers).
+  Brainstorming and plan-writing are **inline** in the plan agents (`# BRAINSTORM STRUCTURE` /
+  `# PLAN STRUCTURE`), not external skills — self-contained when installed without superpowers.
+- **Missing skill → inform, don't block.** No agent installs unasked and none halts over a missing
+  skill. Plan agents (no bash) print the `npx skills add …` command, write it into the plan doc's
+  "Suggested skills" note, and continue on the inline fallback. Build + combined agents (have bash)
+  ask `(y/n)` first; declined → continue and say what degrades. A declined `code-review` install
+  means the work is reported **unreviewed**, not silently skipped.
+- OpenCode ships `scout` (external docs / dependency research) and `explore` (codebase search) as
+  **built-in subagents** — invoked via the `task` tool, allowed in every architect frontmatter, no
+  install. They are not skills and not from superpowers. Claude Code has no equivalent for
+  `architect-plan`: it has no `Agent`/`Task` tool and researches deps with `WebSearch`/`WebFetch`.
 - All agents also auto-load [`ponytail`](https://github.com/DietrichGebert/ponytail) (external
   skill, install separately) for lazy/minimal output — plan agents design lazily (YAGNI),
   build agents build lazily (reuse/stdlib/native/dep before new code). TDD gate still wins on
