@@ -18,11 +18,13 @@ agent-skills/
     README.md       # required — install command + trigger list
     supporting.*    # optional — extra reference docs, templates
   agents/
-    architect.claude-plan.md    # Claude Code plan-only (opus)
-    architect.claude-build.md   # Claude Code build-only (sonnet)
-    architect.opencode.md       # OpenCode combined (plan+build, gated)
-    architect.opencode-plan.md  # OpenCode plan-only (bash denied)
-    architect.opencode-build.md # OpenCode build-only
+    claude/
+      architect.claude-plan.md  # Claude Code plan-only (opus)
+      architect.claude-build.md # Claude Code build-only (sonnet)
+    opencode/
+      architect.md               # OpenCode combined (plan+build, gated)
+      architect-plan.md          # OpenCode plan-only (bash denied)
+      architect-build.md         # OpenCode build-only
     README.md       # agent setup + workflow docs
   scripts/
     install_agents.py           # fetch + install agent files from GitHub raw
@@ -76,15 +78,21 @@ See `docs/adding-skills.md` for the full checklist.
 
 ## Agents
 
-Agent files live flat in `agents/`, named `architect.<platform>-<role>.md`:
+Agent files live under `agents/claude/` and `agents/opencode/`, split by platform. Claude Code
+files are named `architect.claude-<role>.md` — Claude Code reads the agent's display name from
+frontmatter `name:`, decoupled from the filename, so the platform tag in the filename costs
+nothing. OpenCode has no such field: the display name *is* the filename minus `.md`, so its files
+drop the redundant `opencode` segment entirely (`architect.md`, `architect-plan.md`,
+`architect-build.md`) — otherwise Tab-switching would show `Architect.Opencode-Build` inside
+OpenCode itself.
 
 | File | Platform | Role |
 |------|----------|------|
-| `architect.claude-plan.md` | Claude Code | Plan-only (opus) — read-only, never executes |
-| `architect.claude-build.md` | Claude Code | Build-only (sonnet) — executes saved plans |
-| `architect.opencode.md` | OpenCode | Combined plan+build in one agent, prose-gated |
-| `architect.opencode-plan.md` | OpenCode | Plan-only — `bash: deny`, gate enforced by runtime |
-| `architect.opencode-build.md` | OpenCode | Build-only — executes saved plans |
+| `claude/architect.claude-plan.md` | Claude Code | Plan-only (opus) — read-only, never executes |
+| `claude/architect.claude-build.md` | Claude Code | Build-only (sonnet) — executes saved plans |
+| `opencode/architect.md` | OpenCode | Combined plan+build in one agent, prose-gated |
+| `opencode/architect-plan.md` | OpenCode | Plan-only — `bash: deny`, gate enforced by runtime |
+| `opencode/architect-build.md` | OpenCode | Build-only — executes saved plans |
 
 ### Plan / Build Split
 

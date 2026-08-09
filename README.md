@@ -35,11 +35,11 @@ Agent definitions for AI coding tools — companion to skills. Each agent has a 
 
 | Agent | Platform | Role |
 |-------|----------|------|
-| [architect-plan](./agents/architect.claude-plan.md) | Claude Code | Plan-only (read-only, opus) — writes documentation plan, hands off to architect-build |
-| [architect-build](./agents/architect.claude-build.md) | Claude Code | Build-only (sonnet) — executes plans from architect-plan |
-| [architect](./agents/architect.opencode.md) | OpenCode | Plan + build in one agent, gated on `execute`/`continue` |
-| [architect-plan](./agents/architect.opencode-plan.md) | OpenCode | Plan-only (`bash` denied) — writes plan doc, hands off to architect-build |
-| [architect-build](./agents/architect.opencode-build.md) | OpenCode | Build-only — executes plans from architect-plan |
+| [architect-plan](./agents/claude/architect.claude-plan.md) | Claude Code | Plan-only (read-only, opus) — writes documentation plan, hands off to architect-build |
+| [architect-build](./agents/claude/architect.claude-build.md) | Claude Code | Build-only (sonnet) — executes plans from architect-plan |
+| [architect](./agents/opencode/architect.md) | OpenCode | Plan + build in one agent, gated on `execute`/`continue` |
+| [architect-plan](./agents/opencode/architect-plan.md) | OpenCode | Plan-only (`bash` denied) — writes plan doc, hands off to architect-build |
+| [architect-build](./agents/opencode/architect-build.md) | OpenCode | Build-only — executes plans from architect-plan |
 
 See [agents/README.md](./agents/README.md) for setup and workflow details.
 

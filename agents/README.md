@@ -6,11 +6,11 @@ Agent definitions for AI coding tools. Drop these into your tool's agent/config 
 
 | Agent | File | Platform | Model | Role |
 |-------|------|----------|-------|------|
-| architect-plan | `architect.claude-plan.md` | Claude Code | opus | Plan-only — never executes |
-| architect-build | `architect.claude-build.md` | Claude Code | sonnet | Build-only — executes saved plans |
-| architect | `architect.opencode.md` | OpenCode | configurable | Plan + build in one agent, gated |
-| architect-plan | `architect.opencode-plan.md` | OpenCode | configurable | Plan-only — `bash` denied, never executes |
-| architect-build | `architect.opencode-build.md` | OpenCode | configurable | Build-only — executes saved plans |
+| architect-plan | `claude/architect.claude-plan.md` | Claude Code | opus | Plan-only — never executes |
+| architect-build | `claude/architect.claude-build.md` | Claude Code | sonnet | Build-only — executes saved plans |
+| architect | `opencode/architect.md` | OpenCode | configurable | Plan + build in one agent, gated |
+| architect-plan | `opencode/architect-plan.md` | OpenCode | configurable | Plan-only — `bash` denied, never executes |
+| architect-build | `opencode/architect-build.md` | OpenCode | configurable | Build-only — executes saved plans |
 
 ---
 
@@ -168,21 +168,21 @@ Copy the relevant file into your tool's agent directory:
 
 ```bash
 # plan agent
-curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.claude-plan.md
+curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/claude/architect.claude-plan.md
 
 # build agent
-curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.claude-build.md
+curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/claude/architect.claude-build.md
 ```
 
 **OpenCode** — place in `~/.opencode/agents/` or `.opencode/agents/` in your project:
 
 ```bash
 # combined agent (plan + build in one, gated)
-curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.opencode.md
+curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/opencode/architect.md
 
 # two-agent split (recommended)
-curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.opencode-plan.md
-curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/architect.opencode-build.md
+curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/opencode/architect-plan.md
+curl -O https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/opencode/architect-build.md
 ```
 
 ### Script install (alternative)

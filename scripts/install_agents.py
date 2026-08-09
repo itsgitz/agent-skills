@@ -12,9 +12,9 @@ from pathlib import Path
 REPO_RAW_BASE = "https://raw.githubusercontent.com/itsgitz/agent-skills/master/agents/"
 
 AGENT_FILES = {
-    ("claude", "split"): ["architect.claude-plan.md", "architect.claude-build.md"],
-    ("opencode", "combined"): ["architect.opencode.md"],
-    ("opencode", "split"): ["architect.opencode-plan.md", "architect.opencode-build.md"],
+    ("claude", "split"): ["claude/architect.claude-plan.md", "claude/architect.claude-build.md"],
+    ("opencode", "combined"): ["opencode/architect.md"],
+    ("opencode", "split"): ["opencode/architect-plan.md", "opencode/architect-build.md"],
 }
 
 # Skills the agents auto-load. None is required — a missing one only degrades the agent,
@@ -104,7 +104,7 @@ def resolve_selection(args):
 def confirm_plan(files, dest_dir):
     print(f"Will install into {dest_dir}:")
     for f in files:
-        print(f"  {f}")
+        print(f"  {Path(f).name}")
     reply = input("Proceed? [y/N] ").strip().lower()
     return reply in ("y", "yes")
 
@@ -132,7 +132,7 @@ def write_atomic(dest, data):
 
 
 def install_one(filename, dest_dir, args):
-    dest = dest_dir / filename
+    dest = dest_dir / Path(filename).name
     exists = dest.exists() and not args.force
 
     if args.dry_run:
