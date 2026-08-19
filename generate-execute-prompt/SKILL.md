@@ -48,8 +48,8 @@ file under the project's `.claude/generated-prompts/`.
 ## When NOT to Use
 
 - Nothing has been proposed or confirmed yet, and no plan exists — brainstorm
-  and design first (see `writing-plans` / the `architect-plan` agent). Don't
-  fabricate a plan out of thin air.
+  and design first (see the `architect-plan` agent). Don't fabricate a plan
+  out of thin air.
 - Executing in the **same** long-context session that wrote the plan — no
   hand-off needed, just continue (e.g. Claude Code with Sonnet 5's ~1M
   context can go straight from plan to build in one session)
