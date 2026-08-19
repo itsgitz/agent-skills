@@ -73,6 +73,7 @@ See `docs/adding-skills.md` for the full checklist.
 - [ ] `SKILL.md` has Overview, When to Use, When NOT to Use, code example
 - [ ] `README.md` has install command and trigger list
 - [ ] Row added to root `README.md` skills table
+- [ ] Any skill/agent named in the body actually exists in this repo (or names its external source repo) — no dangling references to renamed or never-created skills
 
 ---
 
@@ -101,7 +102,7 @@ The core design: planning and execution are separated so a planning agent can't 
 - **Claude Code** — role split, not mandatory two sessions: `@architect-plan` (opus) writes the plan, then hands off with a build menu. Default is same-session — the main thread spawns `@architect-build` as a sonnet subagent (subagents honor their own `model:`; hand-off works via the plan saved to disk). Alternatives: a fresh `@architect-build` session (clean context), or another model via `/generate-execute-prompt`. `architect-plan` never spawns the builder itself (no `Agent`/`Bash` tool).
 - **OpenCode combined** — one agent, prose gate. Halts after writing the plan; resumes build only on `execute` / `continue` / `go` / `build it` / `run it`.
 - **OpenCode split (recommended)** — Tab-switch between two agents. `architect-plan` sets `bash: deny`, so the no-execution gate is machine-enforced, not prose.
-- **Any model/tool** — use the `generate-execute-prompt` skill to produce a portable prompt that can execute the plan in a different model, tool, or fresh session.
+- **Any model/tool** — use the `generate-execute-prompt` skill to produce a portable prompt that can execute the plan in a different model, tool, or fresh session. It also works with no saved plan file: if the user just confirmed an ad-hoc action proposed earlier in the conversation, the skill synthesizes a minimal plan from that exchange instead of requiring a `docs/plans/` doc.
 
 ### Plan location convention
 
